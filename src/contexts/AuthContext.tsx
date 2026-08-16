@@ -2,12 +2,14 @@ import {
   createContext,
   useContext,
   useEffect,
+  useRef,
   useState,
   type ReactNode,
 } from 'react'
 import { onAuthStateChanged, signOut as firebaseSignOut, type User } from 'firebase/auth'
 import { auth } from '../firebase/config'
 import { subscribeProfile } from '../firebase/profiles'
+import { notifyLocally } from '../lib/localNotify'
 import type { Profile } from '../types'
 
 export type AppStage =
@@ -52,10 +54,20 @@ export function AuthProvider({ children }: { children: ReactNode }) {
     })
   }, [])
 
+  const prevStatusRef = useRef<Profile['status'] | null>(null)
+
   useEffect(() => {
     if (!user) return
     setProfileResolved(false)
+    prevStatusRef.current = null
     const unsub = subscribeProfile(user.uid, (p) => {
+      const prev = prevStatusRef.current
+      if (prev === 'pending' && p?.status === 'approved') {
+        notifyLocally("You're in!", `Welcome to the ${p.batch} Directory.`)
+      } else if (prev === 'pending' && p?.status === 'rejected') {
+        notifyLocally('Signup update', "Your request wasn't approved.")
+      }
+      prevStatusRef.current = p?.status ?? null
       setProfile(p)
       setProfileResolved(true)
     })

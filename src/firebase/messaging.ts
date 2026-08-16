@@ -1,25 +1,14 @@
-import { getToken, getMessaging, isSupported } from 'firebase/messaging'
-import { doc, updateDoc } from 'firebase/firestore'
-import { app, db, isFirebaseConfigured } from './config'
-
-export async function registerForPush(uid: string): Promise<void> {
-  if (!isFirebaseConfigured) return
-  if (!(await isSupported().catch(() => false))) return
-  if (Notification.permission === 'denied') return
-
+/**
+ * Requests OS notification permission so the local-notification fallback in
+ * AuthContext can fire. (Real server-sent push via FCM needs a Cloud
+ * Function, which needs the paid Blaze plan — see localNotify.ts.)
+ */
+export async function registerForPush(): Promise<void> {
+  if (typeof Notification === 'undefined') return
+  if (Notification.permission !== 'default') return
   try {
-    const permission = await Notification.requestPermission()
-    if (permission !== 'granted') return
-
-    const registration = await navigator.serviceWorker.register('/firebase-messaging-sw.js')
-    const messaging = getMessaging(app)
-    const vapidKey = import.meta.env.VITE_FIREBASE_VAPID_KEY as string | undefined
-    const token = await getToken(messaging, { vapidKey, serviceWorkerRegistration: registration })
-    if (token) {
-      await updateDoc(doc(db, 'profiles', uid), { fcmToken: token })
-    }
-  } catch (err) {
-    // Push is best-effort — never block the app on it (e.g. unsupported iOS PWA context).
-    console.warn('Push registration skipped:', err)
+    await Notification.requestPermission()
+  } catch {
+    // Never block the app on this.
   }
 }

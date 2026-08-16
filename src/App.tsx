@@ -13,13 +13,13 @@ import OwnProfile from './routes/OwnProfile'
 import Admin from './routes/Admin'
 
 function Gate() {
-  const { stage, user } = useAuth()
+  const { stage } = useAuth()
 
   useEffect(() => {
-    if (stage === 'ready' && user) {
-      registerForPush(user.uid)
+    if (stage === 'ready') {
+      registerForPush()
     }
-  }, [stage, user])
+  }, [stage])
 
   if (stage === 'loading') {
     return (

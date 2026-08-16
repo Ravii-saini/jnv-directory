@@ -1,32 +1,68 @@
-# React + TypeScript + Vite
+# JNV 2020 Directory
 
-This template provides a minimal setup to get React working in Vite with HMR and some Oxlint rules.
+A verified, admin-approved "who's who" PWA for JNV batch 2020. See
+`batch-directory-spec.md` for the full product spec.
 
-Currently, two official plugins are available:
+Runs entirely on Firebase's free **Spark** plan — no billing account
+required. Photo uploads are stored inline in Firestore (resized/compressed
+client-side) instead of Cloud Storage, and approve/reject notifications use
+a live in-app fallback instead of a Cloud Function, since both of Firebase's
+usual tools for those (Storage, Functions) require the paid Blaze plan.
 
-- [@vitejs/plugin-react](https://github.com/vitejs/vite-plugin-react/blob/main/packages/plugin-react) uses [Oxc](https://oxc.rs)
-- [@vitejs/plugin-react-swc](https://github.com/vitejs/vite-plugin-react/blob/main/packages/plugin-react-swc) uses [SWC](https://swc.rs/)
+## Local development
 
-## React Compiler
-
-The React Compiler is not enabled on this template because of its impact on dev & build performances. To add it, see [this documentation](https://react.dev/learn/react-compiler/installation).
-
-## Expanding the Oxlint configuration
-
-If you are developing a production application, we recommend enabling type-aware lint rules by installing `oxlint-tsgolint` and editing `.oxlintrc.json`:
-
-```json
-{
-  "$schema": "./node_modules/oxlint/configuration_schema.json",
-  "plugins": ["react", "typescript", "oxc"],
-  "options": {
-    "typeAware": true
-  },
-  "rules": {
-    "react/rules-of-hooks": "error",
-    "react/only-export-components": ["warn", { "allowConstantExport": true }]
-  }
-}
+```
+npm install
+npm run dev
 ```
 
-See the [Oxlint rules documentation](https://oxc.rs/docs/guide/usage/linter/rules) for the full list of rules and categories.
+Copy `.env.example` to `.env` and fill in your Firebase project's web config
+(Project settings → General → Your apps → SDK setup and configuration).
+`public/firebase-messaging-sw.js` needs the same six values pasted in by
+hand — service workers can't read `.env`.
+
+## First-time Firebase project setup
+
+1. **Authentication → Sign-in method → enable Phone.**
+2. **Firestore Database → Create database** (production mode).
+3. Deploy security rules once the Firebase CLI is installed and you're
+   logged in (`npx firebase-tools login`):
+   ```
+   npx firebase-tools deploy --only firestore:rules,firestore:indexes --project <your-project-id>
+   ```
+4. **Make yourself admin.** Register through the app once so your
+   `profiles/{yourUid}` document exists, then open it in the Firestore
+   console and manually set `status: "approved"` and `isAdmin: true`. From
+   then on you can approve everyone else from inside the app's Admin tab.
+5. **Deploy to Hosting:**
+   ```
+   npm run build
+   npx firebase-tools deploy --only hosting --project <your-project-id>
+   ```
+
+## If you later upgrade to the Blaze plan
+
+Blaze still has a generous free tier — for ~50 users this will almost
+certainly stay at $0/month, but a card has to be on file. If you upgrade:
+
+- **Cloud Storage** becomes available for real file storage. `storage.rules`
+  is already written; enable Storage in the console, then
+  `npx firebase-tools deploy --only storage`.
+- **Real push notifications** become possible. `functions/index.js` has a
+  Firestore-triggered Cloud Function ready to go — it sends a push the
+  moment a profile's `status` changes to `approved` or `rejected`. It reads
+  the token from `profiles/{uid}.fcmToken`, which isn't currently being
+  written (see `src/firebase/messaging.ts`); wire that back up with
+  `getMessaging`/`getToken` (the pieces are in git history / this file's
+  comments) and deploy with
+  `npx firebase-tools deploy --only functions`.
+
+## Known limitations
+
+- iOS users must "Add to Home Screen" for any web notifications to work at
+  all — this is an iOS Safari restriction, not specific to this app.
+- Without Blaze, notifications only fire while the recipient's tab/PWA is
+  open (foreground or background) at the moment an admin acts — there's no
+  way to wake up a fully-closed app without a server component.
+- Admin approval is manual and single-person — expect some delay right
+  after launch when many people sign up at once.
