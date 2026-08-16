@@ -5,15 +5,37 @@ import { getProfile } from '../firebase/profiles'
 import Avatar from '../components/Avatar'
 import type { Profile, ViewerContext } from '../types'
 import { canSeeField } from '../types'
+import { instagramHandle, instagramUrl } from '../lib/instagram'
 
-function Row({ label, value }: { label: string; value?: string }) {
+function Row({
+  label,
+  value,
+  href,
+  display,
+}: {
+  label: string
+  value?: string
+  href?: string
+  display?: string
+}) {
   if (!value) return null
   return (
     <div style={{ marginBottom: 16 }}>
       <div className="faint" style={{ marginBottom: 2 }}>
         {label}
       </div>
-      <div style={{ fontSize: 15, fontWeight: 500 }}>{value}</div>
+      {href ? (
+        <a
+          href={href}
+          target="_blank"
+          rel="noopener noreferrer"
+          style={{ fontSize: 15, fontWeight: 600, color: 'var(--accent)' }}
+        >
+          {display ?? value}
+        </a>
+      ) : (
+        <div style={{ fontSize: 15, fontWeight: 500 }}>{value}</div>
+      )}
     </div>
   )
 }
@@ -59,6 +81,7 @@ export default function MemberProfile() {
   const showInstagram = canSeeField(member.instagramVisibility, member, ctx)
   const showCollege = canSeeField(member.collegeVisibility, member, ctx)
   const showPhone = canSeeField(member.phoneVisibility, member, ctx)
+  const showEmail = canSeeField(member.emailVisibility, member, ctx)
 
   return (
     <div className="screen">
@@ -80,10 +103,19 @@ export default function MemberProfile() {
         <div className="card">
           <Row label="House" value={member.house} />
           <Row label="12th Stream" value={member.stream} />
+          <Row label="Hometown" value={member.hometown} />
           <Row label="Current job / company" value={member.job} />
           {showCollege && <Row label="College" value={member.college} />}
-          {showInstagram && <Row label="Instagram" value={member.instagram} />}
+          {showInstagram && member.instagram && (
+            <Row
+              label="Instagram"
+              value={member.instagram}
+              href={instagramUrl(member.instagram)}
+              display={instagramHandle(member.instagram)}
+            />
+          )}
           <Row label="LinkedIn" value={member.linkedin} />
+          {showEmail && <Row label="Email" value={member.email} />}
           {showPhone && <Row label="Phone" value={member.phone} />}
           <Row label="Batch" value={member.batch} />
         </div>

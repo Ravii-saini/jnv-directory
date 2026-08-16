@@ -11,6 +11,7 @@ import { getAlumniWhatsAppLink, getBatchWhatsAppLink, setAlumniWhatsAppLink, set
 import Avatar from '../components/Avatar'
 import BottomNav from '../components/BottomNav'
 import { ACTIVE_BATCH, type Profile } from '../types'
+import { instagramHandle, instagramUrl } from '../lib/instagram'
 
 function CheckIcon() {
   return (
@@ -132,7 +133,15 @@ export default function Admin() {
                     padding: '8px 10px',
                   }}
                 >
-                  IG: {m.instagram} · Phone: {m.phone}
+                  IG:{' '}
+                  {m.instagram ? (
+                    <a href={instagramUrl(m.instagram)} target="_blank" rel="noopener noreferrer" style={{ color: 'var(--accent)', fontWeight: 600 }}>
+                      {instagramHandle(m.instagram)}
+                    </a>
+                  ) : (
+                    '—'
+                  )}{' '}
+                  · Phone: {m.phone} · {m.email}
                 </div>
                 <div style={{ display: 'flex', gap: 8 }}>
                   <button

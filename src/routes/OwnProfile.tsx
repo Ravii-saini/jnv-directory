@@ -8,6 +8,7 @@ import AvatarPicker from '../components/AvatarPicker'
 import BottomNav from '../components/BottomNav'
 import WhatsAppButtons from '../components/WhatsAppButtons'
 import { HOUSES, STREAMS, type House, type Stream, type Visibility } from '../types'
+import { instagramHandle, instagramUrl } from '../lib/instagram'
 
 export default function OwnProfile() {
   const { user, profile, signOut } = useAuth()
@@ -23,6 +24,7 @@ export default function OwnProfile() {
     name: profile?.name ?? '',
     stream: (profile?.stream ?? STREAMS[0]) as Stream,
     house: (profile?.house ?? HOUSES[0]) as House,
+    hometown: profile?.hometown ?? '',
     city: profile?.city ?? '',
     job: profile?.job ?? '',
     instagram: profile?.instagram ?? '',
@@ -35,6 +37,7 @@ export default function OwnProfile() {
     photoUrl: profile?.photoUrl,
     photoVisibility: (profile?.photoVisibility ?? 'batch') as Visibility,
     phoneVisibility: (profile?.phoneVisibility ?? 'private') as Visibility,
+    emailVisibility: (profile?.emailVisibility ?? 'batch') as Visibility,
   })
 
   const set = <K extends keyof typeof form>(key: K, value: (typeof form)[K]) =>
@@ -65,6 +68,7 @@ export default function OwnProfile() {
         name: form.name.trim(),
         stream: form.stream,
         house: form.house,
+        hometown: form.hometown.trim(),
         city: form.city.trim(),
         job: form.job.trim() || undefined,
         instagram: form.instagram.trim(),
@@ -77,6 +81,7 @@ export default function OwnProfile() {
         photoUrl: form.photoUrl,
         photoVisibility: form.photoVisibility as 'batch' | 'anyone',
         phoneVisibility: form.phoneVisibility,
+        emailVisibility: form.emailVisibility as 'batch' | 'anyone',
       })
       setEditing(false)
     } catch (err) {
@@ -149,10 +154,17 @@ export default function OwnProfile() {
             <div className="card" style={{ marginBottom: 20, display: 'flex', flexDirection: 'column', gap: 12 }}>
               <DetailRow label="House" value={profile.house} />
               <DetailRow label="12th Stream" value={profile.stream} />
+              <DetailRow label="Hometown" value={profile.hometown} />
               <DetailRow label="Job / company" value={profile.job} />
               <DetailRow label="College" value={profile.college} />
-              <DetailRow label="Instagram" value={profile.instagram} />
+              <DetailRow
+                label="Instagram"
+                value={profile.instagram}
+                href={profile.instagram ? instagramUrl(profile.instagram) : undefined}
+                display={profile.instagram ? instagramHandle(profile.instagram) : undefined}
+              />
               <DetailRow label="LinkedIn" value={profile.linkedin} />
+              <DetailRow label="Email" value={profile.email} />
               <DetailRow label="Phone" value={profile.phone} />
             </div>
             <div style={{ marginBottom: 20 }}>
@@ -189,6 +201,10 @@ export default function OwnProfile() {
               </select>
             </div>
             <div className="field">
+              <label>Hometown</label>
+              <input className="input" value={form.hometown} onChange={(e) => set('hometown', e.target.value)} />
+            </div>
+            <div className="field">
               <label>Current city</label>
               <input className="input" value={form.city} onChange={(e) => set('city', e.target.value)} />
             </div>
@@ -207,8 +223,15 @@ export default function OwnProfile() {
 
             <div className="card" style={{ marginBottom: 18 }}>
               <div className="field" style={{ marginBottom: 10 }}>
-                <label>Instagram</label>
-                <input className="input" value={form.instagram} onChange={(e) => set('instagram', e.target.value)} />
+                <label>Instagram profile link</label>
+                <input
+                  className="input"
+                  type="url"
+                  placeholder="https://instagram.com/yourhandle"
+                  value={form.instagram}
+                  onChange={(e) => set('instagram', e.target.value)}
+                />
+                <span className="hint">We'll just show your @handle, linked to this.</span>
               </div>
               <VisibilityPicker value={form.instagramVisibility} onChange={(v) => set('instagramVisibility', v)} />
             </div>
@@ -224,6 +247,17 @@ export default function OwnProfile() {
                 <input className="input" value={form.college} onChange={(e) => set('college', e.target.value)} />
               </div>
               <VisibilityPicker value={form.collegeVisibility} onChange={(v) => set('collegeVisibility', v)} />
+            </div>
+
+            <div className="card" style={{ marginBottom: 18 }}>
+              <div style={{ marginBottom: 10 }}>
+                <div className="faint" style={{ marginBottom: 2 }}>Email</div>
+                <div style={{ fontSize: 15, fontWeight: 500 }}>{profile.email}</div>
+              </div>
+              <label style={{ fontSize: 13, fontWeight: 600, color: 'var(--text-muted)', marginBottom: 6, display: 'block' }}>
+                Who can see your email?
+              </label>
+              <VisibilityPicker value={form.emailVisibility} onChange={(v) => set('emailVisibility', v)} />
             </div>
 
             <div className="card" style={{ marginBottom: 24 }}>
@@ -246,12 +280,33 @@ export default function OwnProfile() {
   )
 }
 
-function DetailRow({ label, value }: { label: string; value?: string }) {
+function DetailRow({
+  label,
+  value,
+  href,
+  display,
+}: {
+  label: string
+  value?: string
+  href?: string
+  display?: string
+}) {
   if (!value) return null
   return (
     <div style={{ display: 'flex', justifyContent: 'space-between', gap: 12 }}>
       <span className="faint">{label}</span>
-      <span style={{ fontSize: 14, fontWeight: 500, textAlign: 'right' }}>{value}</span>
+      {href ? (
+        <a
+          href={href}
+          target="_blank"
+          rel="noopener noreferrer"
+          style={{ fontSize: 14, fontWeight: 600, textAlign: 'right', color: 'var(--accent)' }}
+        >
+          {display ?? value}
+        </a>
+      ) : (
+        <span style={{ fontSize: 14, fontWeight: 500, textAlign: 'right' }}>{value}</span>
+      )}
     </div>
   )
 }

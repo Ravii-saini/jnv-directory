@@ -38,13 +38,14 @@ export function subscribeProfile(
 
 export type RegistrationInput = Pick<
   Profile,
-  'name' | 'stream' | 'house' | 'city' | 'instagram'
+  'name' | 'stream' | 'house' | 'hometown' | 'city' | 'instagram'
 > &
   Partial<Pick<Profile, 'photoUrl' | 'bio' | 'job' | 'linkedin' | 'college'>>
 
 export async function submitRegistration(
   uid: string,
   phone: string,
+  email: string,
   input: RegistrationInput,
 ): Promise<void> {
   const profile: Profile = {
@@ -52,12 +53,15 @@ export async function submitRegistration(
     phone,
     phoneVisibility: 'private',
     name: input.name,
+    email,
+    emailVisibility: 'batch',
     photoUrl: input.photoUrl,
     photoVisibility: 'batch',
     bio: input.bio,
     bioVisibility: 'batch',
     stream: input.stream,
     house: input.house,
+    hometown: input.hometown,
     city: input.city,
     job: input.job,
     instagram: input.instagram,

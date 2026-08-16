@@ -1,10 +1,10 @@
 export type Visibility = 'private' | 'batch' | 'anyone'
 export type OpenVisibility = 'batch' | 'anyone'
 export type MemberStatus = 'pending' | 'approved' | 'rejected' | 'removed'
-export type Stream = 'Science' | 'Commerce' | 'Arts'
+export type Stream = 'PCM' | 'PCB' | 'Commerce' | 'Arts' | 'Others'
 export type House = 'Aravali' | 'Nilgiri' | 'Shivalik' | 'Udaigiri'
 
-export const STREAMS: Stream[] = ['Science', 'Commerce', 'Arts']
+export const STREAMS: Stream[] = ['PCM', 'PCB', 'Commerce', 'Arts', 'Others']
 export const HOUSES: House[] = ['Aravali', 'Nilgiri', 'Shivalik', 'Udaigiri']
 
 /** The one batch open in v1. Data model supports others; only this is live. */
@@ -17,6 +17,9 @@ export interface Profile {
 
   name: string // mandatory, always visible
 
+  email: string // auto-collected from Google sign-in
+  emailVisibility: OpenVisibility
+
   photoUrl?: string
   photoVisibility: OpenVisibility
 
@@ -25,7 +28,8 @@ export interface Profile {
 
   stream: Stream // mandatory, always visible
   house: House // mandatory, always visible
-  city: string // mandatory, always visible
+  hometown: string // mandatory, always visible
+  city: string // mandatory, always visible — current city
   job?: string // always visible once set
 
   instagram: string // mandatory

@@ -9,6 +9,7 @@ export default function Register() {
   const [phone, setPhone] = useState('')
   const [stream, setStream] = useState<Stream | ''>('')
   const [house, setHouse] = useState<House | ''>('')
+  const [hometown, setHometown] = useState('')
   const [city, setCity] = useState('')
   const [instagram, setInstagram] = useState('')
   const [showOptional, setShowOptional] = useState(false)
@@ -20,7 +21,13 @@ export default function Register() {
   const [error, setError] = useState<string | null>(null)
 
   const canSubmit =
-    name.trim() && phone.length === 10 && stream && house && city.trim() && instagram.trim()
+    name.trim() &&
+    phone.length === 10 &&
+    stream &&
+    house &&
+    hometown.trim() &&
+    city.trim() &&
+    instagram.trim()
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault()
@@ -28,10 +35,11 @@ export default function Register() {
     setSubmitting(true)
     setError(null)
     try {
-      await submitRegistration(user.uid, `+91${phone}`, {
+      await submitRegistration(user.uid, `+91${phone}`, user.email ?? '', {
         name: name.trim(),
         stream: stream as Stream,
         house: house as House,
+        hometown: hometown.trim(),
         city: city.trim(),
         instagram: instagram.trim(),
         job: job.trim() || undefined,
@@ -115,20 +123,34 @@ export default function Register() {
           </div>
 
           <div className="field">
+            <label htmlFor="hometown">Hometown *</label>
+            <input
+              id="hometown"
+              className="input"
+              placeholder="Where you're originally from"
+              value={hometown}
+              onChange={(e) => setHometown(e.target.value)}
+              required
+            />
+          </div>
+
+          <div className="field">
             <label htmlFor="city">Current city *</label>
             <input id="city" className="input" value={city} onChange={(e) => setCity(e.target.value)} required />
           </div>
 
           <div className="field">
-            <label htmlFor="instagram">Instagram *</label>
+            <label htmlFor="instagram">Instagram profile link *</label>
             <input
               id="instagram"
               className="input"
-              placeholder="@yourhandle"
+              type="url"
+              placeholder="https://instagram.com/yourhandle"
               value={instagram}
               onChange={(e) => setInstagram(e.target.value)}
               required
             />
+            <span className="hint">We'll just show your @handle on your profile, linked to this.</span>
           </div>
 
           {!showOptional ? (

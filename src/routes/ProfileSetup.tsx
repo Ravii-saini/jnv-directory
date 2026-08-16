@@ -30,6 +30,7 @@ export default function ProfileSetup() {
   const [collegeVisibility, setCollegeVisibility] = useState<Visibility>(profile?.collegeVisibility ?? 'batch')
 
   const [phoneVisibility, setPhoneVisibility] = useState<Visibility>(profile?.phoneVisibility ?? 'private')
+  const [emailVisibility, setEmailVisibility] = useState<Visibility>(profile?.emailVisibility ?? 'batch')
 
   const [saving, setSaving] = useState(false)
   const [error, setError] = useState<string | null>(null)
@@ -67,6 +68,7 @@ export default function ProfileSetup() {
         college: college.trim() || undefined,
         collegeVisibility: collegeVisibility as 'batch' | 'anyone',
         phoneVisibility,
+        emailVisibility: emailVisibility as 'batch' | 'anyone',
       })
     } catch (err) {
       console.error(err)
@@ -140,8 +142,16 @@ export default function ProfileSetup() {
 
         <div className="card" style={{ marginBottom: 20 }}>
           <div className="field" style={{ marginBottom: 10 }}>
-            <label htmlFor="instagram">Instagram</label>
-            <input id="instagram" className="input" value={instagram} onChange={(e) => setInstagram(e.target.value)} />
+            <label htmlFor="instagram">Instagram profile link</label>
+            <input
+              id="instagram"
+              className="input"
+              type="url"
+              placeholder="https://instagram.com/yourhandle"
+              value={instagram}
+              onChange={(e) => setInstagram(e.target.value)}
+            />
+            <span className="hint">We'll just show your @handle, linked to this.</span>
           </div>
           <label style={{ fontSize: 13, fontWeight: 600, color: 'var(--text-muted)', marginBottom: 6, display: 'block' }}>
             Who can see your Instagram?
@@ -174,6 +184,17 @@ export default function ProfileSetup() {
             <input id="linkedin" className="input" value={linkedin} onChange={(e) => setLinkedin(e.target.value)} />
           </div>
           <span className="faint">Always visible to other verified members.</span>
+        </div>
+
+        <div className="card" style={{ marginBottom: 20 }}>
+          <div style={{ marginBottom: 10 }}>
+            <div className="faint" style={{ marginBottom: 2 }}>Email</div>
+            <div style={{ fontSize: 15, fontWeight: 500 }}>{profile.email}</div>
+          </div>
+          <label style={{ fontSize: 13, fontWeight: 600, color: 'var(--text-muted)', marginBottom: 6, display: 'block' }}>
+            Who can see your email?
+          </label>
+          <VisibilityPicker value={emailVisibility} onChange={setEmailVisibility} />
         </div>
 
         <div className="card" style={{ marginBottom: 24 }}>
