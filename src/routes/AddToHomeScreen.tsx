@@ -2,6 +2,20 @@ import { useMemo } from 'react'
 import { useAuth } from '../contexts/AuthContext'
 import { markHomeScreenPromptSeen } from '../firebase/profiles'
 
+function ShareIcon() {
+  return (
+    <svg width="15" height="15" viewBox="0 0 24 24" fill="none" style={{ verticalAlign: -2 }}>
+      <path
+        d="M12 3v12M8 7l4-4 4 4M5 12v7a1 1 0 0 0 1 1h12a1 1 0 0 0 1-1v-7"
+        stroke="currentColor"
+        strokeWidth="1.8"
+        strokeLinecap="round"
+        strokeLinejoin="round"
+      />
+    </svg>
+  )
+}
+
 function detectPlatform(): 'ios' | 'android' | 'other' {
   const ua = navigator.userAgent
   if (/iphone|ipad|ipod/i.test(ua)) return 'ios'
@@ -32,7 +46,7 @@ export default function AddToHomeScreen() {
         <div className="card" style={{ textAlign: 'left', marginBottom: 20 }}>
           <ol style={{ margin: 0, paddingLeft: 20, display: 'flex', flexDirection: 'column', gap: 10, fontSize: 14 }}>
             <li>
-              Tap the <strong>Share</strong> icon <span aria-hidden>􀈂</span> in Safari's toolbar
+              Tap the <strong>Share</strong> icon <ShareIcon /> in Safari's toolbar
             </li>
             <li>
               Scroll down and tap <strong>"Add to Home Screen"</strong>

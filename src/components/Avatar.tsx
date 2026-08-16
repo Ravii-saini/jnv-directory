@@ -16,6 +16,10 @@ export default function Avatar({
   photoUrl?: string
   size?: number
 }) {
+  const ring = {
+    boxShadow: `0 0 0 2px var(--bg-elevated), 0 0 0 3px var(--border-soft)`,
+  }
+
   if (photoUrl) {
     return (
       <img
@@ -27,6 +31,7 @@ export default function Avatar({
           borderRadius: '50%',
           objectFit: 'cover',
           flexShrink: 0,
+          ...ring,
         }}
       />
     )
@@ -38,13 +43,14 @@ export default function Avatar({
         height: size,
         borderRadius: '50%',
         background: 'linear-gradient(135deg, var(--accent), var(--accent-2))',
-        color: '#fff',
+        color: 'var(--accent-text)',
         display: 'flex',
         alignItems: 'center',
         justifyContent: 'center',
         fontWeight: 700,
         fontSize: size * 0.38,
         flexShrink: 0,
+        ...ring,
       }}
     >
       {initials(name) || '?'}
