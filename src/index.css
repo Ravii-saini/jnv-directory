@@ -166,8 +166,8 @@ p {
 }
 
 .logo-frame {
-  width: 96px;
-  height: 96px;
+  width: 108px;
+  height: 108px;
   border-radius: var(--radius-lg);
   /* Source logo has an opaque white background baked in, so the frame stays
      white in both themes rather than following --bg-elevated. */
@@ -177,7 +177,7 @@ p {
   display: flex;
   align-items: center;
   justify-content: center;
-  padding: 10px;
+  padding: 6px;
   overflow: hidden;
 }
 
