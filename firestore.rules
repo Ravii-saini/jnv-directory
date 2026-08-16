@@ -25,7 +25,7 @@ service cloud.firestore {
       return isSignedIn()
         && exists(/databases/$(database)/documents/profiles/$(request.auth.uid))
         && callerProfile().status == 'approved'
-        && callerProfile().isAdmin == true;
+        && callerProfile().get('isAdmin', false) == true;
     }
 
     match /profiles/{uid} {
@@ -36,16 +36,19 @@ service cloud.firestore {
 
       // First-time registration: a signed-in user creates their own doc,
       // and it must start life as 'pending' with no admin/status escalation.
+      // isAdmin is normally omitted entirely on regular docs, and dot-access
+      // on a missing map key throws in rules — .get() with a default avoids
+      // that instead of silently denying every write.
       allow create: if isOwner(uid)
         && request.resource.data.uid == uid
         && request.resource.data.status == 'pending'
-        && request.resource.data.isAdmin != true;
+        && request.resource.data.get('isAdmin', false) != true;
 
       // Self-edits: owner can update their own doc, but can never touch
       // status or isAdmin — that's an admin-only escalation path.
       allow update: if isOwner(uid)
         && request.resource.data.status == resource.data.status
-        && request.resource.data.isAdmin == resource.data.isAdmin
+        && request.resource.data.get('isAdmin', false) == resource.data.get('isAdmin', false)
         && request.resource.data.uid == resource.data.uid
         || isAdminCaller();
 
