@@ -33,8 +33,8 @@ export default function AddToHomeScreen() {
 
   return (
     <div className="screen-centered" style={{ textAlign: 'center' }}>
-      <div className="brand-mark" style={{ margin: '0 auto 20px' }}>
-        J20
+      <div className="logo-frame" style={{ margin: '0 auto 20px' }}>
+        <img src="/logo-navodaya.png" alt="Navodaya Vidyalaya Samiti" />
       </div>
       <h1 style={{ fontSize: 20, fontWeight: 800, marginBottom: 10 }}>Add this to your Home Screen</h1>
       <p className="muted" style={{ fontSize: 14, marginBottom: 24 }}>

@@ -17,7 +17,7 @@ const messaging = firebase.messaging()
 
 messaging.onBackgroundMessage((payload) => {
   const { title, body } = payload.notification ?? {}
-  self.registration.showNotification(title ?? 'JNV 2020 Directory', {
+  self.registration.showNotification(title ?? 'JNV Alwar 2020 Directory', {
     body: body ?? '',
     icon: '/icons/icon-192.png',
     badge: '/icons/icon-192.png',

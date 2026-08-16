@@ -43,39 +43,53 @@ export default function Landing() {
   }
 
   return (
-    <div className="screen-centered">
-      <div style={{ display: 'flex', flexDirection: 'column', alignItems: 'center', gap: 14, marginBottom: 40 }}>
-        <div className="brand-mark">J20</div>
-        <h1 style={{ fontSize: 22, fontWeight: 800, letterSpacing: '-0.02em' }}>JNV 2020 Directory</h1>
-        <p className="muted" style={{ textAlign: 'center', fontSize: 14 }}>
-          Verified, admin-approved who's-who for your batch.
-        </p>
+    <div className="screen auth-screen">
+      <div className="auth-backdrop" aria-hidden>
+        <div className="auth-orb a" />
+        <div className="auth-orb b" />
+        <div className="auth-orb c" />
+        <div className="auth-dotgrid" />
       </div>
 
-      {!isFirebaseConfigured && (
-        <div className="card" style={{ marginBottom: 20, borderColor: 'var(--warning)' }}>
-          <p className="faint" style={{ color: 'var(--warning)' }}>
-            Firebase isn't configured yet, so sign-in won't work until env values are added. See
-            the README for setup steps.
+      <div className="screen-centered">
+        <div style={{ display: 'flex', flexDirection: 'column', alignItems: 'center', gap: 16, marginBottom: 40 }}>
+          <div className="logo-frame">
+            <img src="/logo-navodaya.png" alt="Navodaya Vidyalaya Samiti" />
+          </div>
+          <div style={{ textAlign: 'center' }}>
+            <h1 style={{ fontSize: 22, fontWeight: 800, letterSpacing: '-0.02em' }}>JNV Alwar 2020</h1>
+            <p className="faint" style={{ marginTop: 2 }}>Jawahar Navodaya Vidyalaya, Alwar</p>
+          </div>
+          <p className="muted" style={{ textAlign: 'center', fontSize: 14 }}>
+            Verified, admin-approved who's-who for your batch.
           </p>
         </div>
-      )}
 
-      {error && <p style={{ color: 'var(--danger)', fontSize: 13, marginBottom: 14, textAlign: 'center' }}>{error}</p>}
+        {!isFirebaseConfigured && (
+          <div className="card" style={{ marginBottom: 20, borderColor: 'var(--warning)' }}>
+            <p className="faint" style={{ color: 'var(--warning)' }}>
+              Firebase isn't configured yet, so sign-in won't work until env values are added. See
+              the README for setup steps.
+            </p>
+          </div>
+        )}
 
-      <button
-        className="btn btn-secondary"
-        onClick={handleSignIn}
-        disabled={loading}
-        style={{ background: 'var(--bg-elevated)' }}
-      >
-        {loading ? <span className="spinner" /> : <GoogleIcon />}
-        {loading ? 'Signing in…' : 'Continue with Google'}
-      </button>
+        {error && <p style={{ color: 'var(--danger)', fontSize: 13, marginBottom: 14, textAlign: 'center' }}>{error}</p>}
 
-      <p className="faint" style={{ textAlign: 'center', marginTop: 16 }}>
-        We'll ask for your name and a few batch details on the next screen.
-      </p>
+        <button
+          className="btn btn-secondary"
+          onClick={handleSignIn}
+          disabled={loading}
+          style={{ background: 'var(--bg-elevated)' }}
+        >
+          {loading ? <span className="spinner" /> : <GoogleIcon />}
+          {loading ? 'Signing in…' : 'Continue with Google'}
+        </button>
+
+        <p className="faint" style={{ textAlign: 'center', marginTop: 16 }}>
+          We'll ask for your name and a few batch details on the next screen.
+        </p>
+      </div>
     </div>
   )
 }

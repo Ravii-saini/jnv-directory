@@ -76,6 +76,8 @@ p {
 }
 
 .screen-centered {
+  position: relative;
+  z-index: 1;
   flex: 1;
   display: flex;
   flex-direction: column;
@@ -87,6 +89,102 @@ p {
   padding: 24px;
   padding-top: calc(24px + var(--safe-top));
   padding-bottom: calc(24px + var(--safe-bottom));
+}
+
+/* ---------- decorative auth backdrop ---------- */
+
+.auth-screen {
+  position: relative;
+  overflow: hidden;
+}
+
+.auth-backdrop {
+  position: absolute;
+  inset: 0;
+  z-index: 0;
+  overflow: hidden;
+  pointer-events: none;
+}
+
+.auth-orb {
+  position: absolute;
+  border-radius: 50%;
+  filter: blur(64px);
+  animation: auth-drift 20s ease-in-out infinite alternate;
+}
+
+.auth-orb.a {
+  width: 340px;
+  height: 340px;
+  top: -140px;
+  left: -110px;
+  background: radial-gradient(circle, color-mix(in srgb, var(--accent) 55%, transparent), transparent 70%);
+}
+
+.auth-orb.b {
+  width: 300px;
+  height: 300px;
+  bottom: -150px;
+  right: -90px;
+  background: radial-gradient(circle, color-mix(in srgb, var(--accent-2) 55%, transparent), transparent 70%);
+  animation-delay: -7s;
+}
+
+.auth-orb.c {
+  width: 220px;
+  height: 220px;
+  top: 38%;
+  right: 6%;
+  opacity: 0.6;
+  background: radial-gradient(circle, color-mix(in srgb, var(--accent) 45%, transparent), transparent 70%);
+  animation-delay: -3.5s;
+}
+
+.auth-dotgrid {
+  position: absolute;
+  inset: 0;
+  background-image: radial-gradient(color-mix(in srgb, var(--text) 14%, transparent) 1px, transparent 1px);
+  background-size: 24px 24px;
+  -webkit-mask-image: radial-gradient(circle at 50% 32%, black, transparent 72%);
+  mask-image: radial-gradient(circle at 50% 32%, black, transparent 72%);
+  opacity: 0.55;
+}
+
+@keyframes auth-drift {
+  from {
+    transform: translate(0, 0) scale(1);
+  }
+  to {
+    transform: translate(24px, 32px) scale(1.08);
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .auth-orb {
+    animation: none;
+  }
+}
+
+.logo-frame {
+  width: 96px;
+  height: 96px;
+  border-radius: var(--radius-lg);
+  /* Source logo has an opaque white background baked in, so the frame stays
+     white in both themes rather than following --bg-elevated. */
+  background: #ffffff;
+  border: 1px solid var(--border-soft);
+  box-shadow: var(--shadow-glow), var(--shadow-lift);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: 10px;
+  overflow: hidden;
+}
+
+.logo-frame img {
+  width: 100%;
+  height: 100%;
+  object-fit: contain;
 }
 
 /* ---------- top bar ---------- */
