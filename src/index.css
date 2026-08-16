@@ -519,6 +519,24 @@ p {
   border-radius: var(--radius-sm);
   padding: 10px 6px;
   text-align: center;
+  font-family: inherit;
+  transition: transform 0.15s cubic-bezier(0.16, 1, 0.3, 1), background-color 0.2s ease, box-shadow 0.2s ease, border-color 0.2s ease;
+}
+
+button.house-tile {
+  cursor: pointer;
+  appearance: none;
+  margin: 0;
+}
+
+button.house-tile:active {
+  transform: scale(0.96);
+}
+
+.house-tile.active {
+  background: color-mix(in srgb, var(--house-c) 24%, var(--glass-bg));
+  border-color: var(--house-c);
+  box-shadow: 0 0 0 1px var(--house-c), 0 6px 16px color-mix(in srgb, var(--house-c) 35%, transparent);
 }
 
 .house-tile-count {

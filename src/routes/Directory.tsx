@@ -31,6 +31,7 @@ export default function Directory() {
   const { profile } = useAuth()
   const [members, setMembers] = useState<Profile[]>([])
   const [search, setSearch] = useState('')
+  const [houseFilter, setHouseFilter] = useState<House | null>(null)
 
   useEffect(() => {
     return subscribeApprovedMembers(ACTIVE_BATCH, setMembers)
@@ -44,12 +45,13 @@ export default function Directory() {
 
   const filtered = useMemo(() => {
     const q = search.trim().toLowerCase()
-    const others = members.filter((m) => m.uid !== profile?.uid)
+    let others = members.filter((m) => m.uid !== profile?.uid)
+    if (houseFilter) others = others.filter((m) => m.house === houseFilter)
     if (!q) return others
     return others.filter(
       (m) => m.name.toLowerCase().includes(q) || m.city.toLowerCase().includes(q),
     )
-  }, [members, search, profile])
+  }, [members, search, houseFilter, profile])
 
   const houseCounts = useMemo(() => {
     const counts: Record<House, number> = { Aravali: 0, Nilgiri: 0, Shivalik: 0, Udaigiri: 0 }
@@ -64,14 +66,32 @@ export default function Directory() {
         <span className="badge badge-neutral">{members.length} members</span>
       </div>
       <div className="screen-content has-bottom-nav">
-        <div className="house-cup" style={{ marginBottom: 18 }}>
+        <div className="house-cup" style={{ marginBottom: 10 }}>
           {HOUSES.map((h) => (
-            <div key={h} className="house-tile" style={{ '--house-c': houseColor(h) } as CSSProperties}>
+            <button
+              key={h}
+              type="button"
+              className={`house-tile${houseFilter === h ? ' active' : ''}`}
+              style={{ '--house-c': houseColor(h) } as CSSProperties}
+              onClick={() => setHouseFilter((cur) => (cur === h ? null : h))}
+              aria-pressed={houseFilter === h}
+            >
               <div className="house-tile-count">{houseCounts[h]}</div>
               <div className="house-tile-label">{h}</div>
-            </div>
+            </button>
           ))}
         </div>
+
+        {houseFilter && (
+          <button
+            type="button"
+            className="btn btn-ghost btn-sm"
+            style={{ marginBottom: 8, paddingLeft: 4 }}
+            onClick={() => setHouseFilter(null)}
+          >
+            Showing {houseFilter} only ✕
+          </button>
+        )}
 
         <div className="field" style={{ marginBottom: 16 }}>
           <div style={{ position: 'relative' }}>
@@ -103,7 +123,13 @@ export default function Directory() {
             <div style={{ display: 'flex', justifyContent: 'center', marginBottom: 12 }}>
               <EmptyIcon />
             </div>
-            <p className="muted">{search ? 'No one matches that search.' : 'No other members yet.'}</p>
+            <p className="muted">
+              {search
+                ? 'No one matches that search.'
+                : houseFilter
+                  ? `No other ${houseFilter} members yet.`
+                  : 'No other members yet.'}
+            </p>
           </div>
         ) : (
           <div style={{ display: 'flex', flexDirection: 'column', gap: 10 }}>
