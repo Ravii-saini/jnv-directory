@@ -2,7 +2,7 @@ import { useState } from 'react'
 import { useAuth } from '../contexts/AuthContext'
 import { submitRegistration } from '../firebase/profiles'
 import OccupationToggle from '../components/OccupationToggle'
-import { HOUSES, STREAMS, type House, type OccupationStatus, type Stream } from '../types'
+import { HOUSES, SECTIONS, STREAMS, type House, type OccupationStatus, type Section, type Stream } from '../types'
 
 export default function Register() {
   const { user } = useAuth()
@@ -10,13 +10,13 @@ export default function Register() {
   const [phone, setPhone] = useState('')
   const [stream, setStream] = useState<Stream | ''>('')
   const [house, setHouse] = useState<House | ''>('')
+  const [section, setSection] = useState<Section | ''>('')
   const [hometown, setHometown] = useState('')
   const [city, setCity] = useState('')
   const [instagram, setInstagram] = useState('')
   const [showOptional, setShowOptional] = useState(false)
   const [occupationStatus, setOccupationStatus] = useState<OccupationStatus>('working')
   const [job, setJob] = useState('')
-  const [linkedin, setLinkedin] = useState('')
   const [college, setCollege] = useState('')
   const [bio, setBio] = useState('')
   const [submitting, setSubmitting] = useState(false)
@@ -41,12 +41,12 @@ export default function Register() {
         name: name.trim(),
         stream: stream as Stream,
         house: house as House,
+        section: section || undefined,
         hometown: hometown.trim(),
         city: city.trim(),
         instagram: instagram.trim(),
         occupationStatus: job.trim() ? occupationStatus : undefined,
         job: job.trim() || undefined,
-        linkedin: linkedin.trim() || undefined,
         college: college.trim() || undefined,
         bio: bio.trim() || undefined,
       })
@@ -126,6 +126,18 @@ export default function Register() {
           </div>
 
           <div className="field">
+            <label htmlFor="section">Section</label>
+            <select id="section" className="select" value={section} onChange={(e) => setSection(e.target.value as Section)}>
+              <option value="">Not sure / skip</option>
+              {SECTIONS.map((s) => (
+                <option key={s} value={s}>
+                  Section {s}
+                </option>
+              ))}
+            </select>
+          </div>
+
+          <div className="field">
             <label htmlFor="hometown">Hometown *</label>
             <input
               id="hometown"
@@ -158,7 +170,7 @@ export default function Register() {
 
           {!showOptional ? (
             <button type="button" className="btn btn-ghost" onClick={() => setShowOptional(true)}>
-              + Add optional details (photo comes later, job, LinkedIn, college, bio)
+              + Add optional details (photo comes later, job, college, bio)
             </button>
           ) : (
             <>
@@ -175,10 +187,6 @@ export default function Register() {
                   value={job}
                   onChange={(e) => setJob(e.target.value)}
                 />
-              </div>
-              <div className="field">
-                <label htmlFor="linkedin">LinkedIn</label>
-                <input id="linkedin" className="input" value={linkedin} onChange={(e) => setLinkedin(e.target.value)} />
               </div>
               <div className="field">
                 <label htmlFor="college">College</label>

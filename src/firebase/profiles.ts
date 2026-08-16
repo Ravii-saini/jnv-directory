@@ -40,7 +40,7 @@ export type RegistrationInput = Pick<
   Profile,
   'name' | 'stream' | 'house' | 'hometown' | 'city' | 'instagram'
 > &
-  Partial<Pick<Profile, 'photoUrl' | 'bio' | 'job' | 'occupationStatus' | 'linkedin' | 'college'>>
+  Partial<Pick<Profile, 'photoUrl' | 'bio' | 'job' | 'occupationStatus' | 'section' | 'college'>>
 
 export async function submitRegistration(
   uid: string,
@@ -61,13 +61,13 @@ export async function submitRegistration(
     bioVisibility: 'batch',
     stream: input.stream,
     house: input.house,
+    section: input.section,
     hometown: input.hometown,
     city: input.city,
     occupationStatus: input.occupationStatus,
     job: input.job,
     instagram: input.instagram,
     instagramVisibility: 'batch',
-    linkedin: input.linkedin,
     college: input.college,
     collegeVisibility: 'batch',
     batch: ACTIVE_BATCH,

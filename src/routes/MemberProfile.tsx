@@ -123,6 +123,7 @@ export default function MemberProfile() {
 
         <div className="card">
           <Row label="House" value={member.house} />
+          <Row label="Section" value={member.section} />
           <Row label="12th Stream" value={member.stream} />
           <Row label="Hometown" value={member.hometown} />
           <Row label={occupationLabel(member.occupationStatus)} value={member.job} />
@@ -135,7 +136,6 @@ export default function MemberProfile() {
               display={instagramHandle(member.instagram)}
             />
           )}
-          <Row label="LinkedIn" value={member.linkedin} />
           {showEmail && <Row label="Email" value={member.email} />}
           {showPhone && <Row label="Phone" value={member.phone} />}
           <Row label="Batch" value={member.batch} />

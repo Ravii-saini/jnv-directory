@@ -9,7 +9,7 @@ import OccupationToggle from '../components/OccupationToggle'
 import BottomNav from '../components/BottomNav'
 import WhatsAppButtons from '../components/WhatsAppButtons'
 import HouseBadge from '../components/HouseBadge'
-import { HOUSES, STREAMS, occupationLabel, type House, type OccupationStatus, type Stream, type Visibility } from '../types'
+import { HOUSES, SECTIONS, STREAMS, occupationLabel, type House, type OccupationStatus, type Section, type Stream, type Visibility } from '../types'
 import { instagramHandle, instagramUrl } from '../lib/instagram'
 import { houseColor } from '../lib/houseColors'
 
@@ -27,13 +27,13 @@ export default function OwnProfile() {
     name: profile?.name ?? '',
     stream: (profile?.stream ?? STREAMS[0]) as Stream,
     house: (profile?.house ?? HOUSES[0]) as House,
+    section: (profile?.section ?? '') as Section | '',
     hometown: profile?.hometown ?? '',
     city: profile?.city ?? '',
     occupationStatus: (profile?.occupationStatus ?? 'working') as OccupationStatus,
     job: profile?.job ?? '',
     instagram: profile?.instagram ?? '',
     instagramVisibility: (profile?.instagramVisibility ?? 'batch') as Visibility,
-    linkedin: profile?.linkedin ?? '',
     college: profile?.college ?? '',
     collegeVisibility: (profile?.collegeVisibility ?? 'batch') as Visibility,
     bio: profile?.bio ?? '',
@@ -72,13 +72,13 @@ export default function OwnProfile() {
         name: form.name.trim(),
         stream: form.stream,
         house: form.house,
+        section: form.section || undefined,
         hometown: form.hometown.trim(),
         city: form.city.trim(),
         occupationStatus: form.job.trim() ? form.occupationStatus : undefined,
         job: form.job.trim() || undefined,
         instagram: form.instagram.trim(),
         instagramVisibility: form.instagramVisibility as 'batch' | 'anyone',
-        linkedin: form.linkedin.trim() || undefined,
         college: form.college.trim() || undefined,
         collegeVisibility: form.collegeVisibility as 'batch' | 'anyone',
         bio: form.bio.trim() || undefined,
@@ -168,6 +168,7 @@ export default function OwnProfile() {
             </div>
             <div className="card" style={{ marginBottom: 20, display: 'flex', flexDirection: 'column', gap: 12 }}>
               <DetailRow label="House" value={profile.house} />
+              <DetailRow label="Section" value={profile.section} />
               <DetailRow label="12th Stream" value={profile.stream} />
               <DetailRow label="Hometown" value={profile.hometown} />
               <DetailRow label={occupationLabel(profile.occupationStatus)} value={profile.job} />
@@ -178,7 +179,6 @@ export default function OwnProfile() {
                 href={profile.instagram ? instagramUrl(profile.instagram) : undefined}
                 display={profile.instagram ? instagramHandle(profile.instagram) : undefined}
               />
-              <DetailRow label="LinkedIn" value={profile.linkedin} />
               <DetailRow label="Email" value={profile.email} />
               <DetailRow label="Phone" value={profile.phone} />
             </div>
@@ -216,6 +216,17 @@ export default function OwnProfile() {
                 {HOUSES.map((h) => (
                   <option key={h} value={h}>
                     {h}
+                  </option>
+                ))}
+              </select>
+            </div>
+            <div className="field">
+              <label>Section</label>
+              <select className="select" value={form.section} onChange={(e) => set('section', e.target.value as Section)}>
+                <option value="">Not sure / skip</option>
+                {SECTIONS.map((s) => (
+                  <option key={s} value={s}>
+                    Section {s}
                   </option>
                 ))}
               </select>
@@ -261,11 +272,6 @@ export default function OwnProfile() {
                 <span className="hint">We'll just show your @handle, linked to this.</span>
               </div>
               <VisibilityPicker value={form.instagramVisibility} onChange={(v) => set('instagramVisibility', v)} />
-            </div>
-
-            <div className="field">
-              <label>LinkedIn</label>
-              <input className="input" value={form.linkedin} onChange={(e) => set('linkedin', e.target.value)} />
             </div>
 
             <div className="card" style={{ marginBottom: 18 }}>

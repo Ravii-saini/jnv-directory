@@ -4,9 +4,11 @@ export type MemberStatus = 'pending' | 'approved' | 'rejected' | 'removed'
 export type Stream = 'PCM' | 'PCB' | 'Commerce' | 'Arts' | 'Others'
 export type House = 'Aravali' | 'Nilgiri' | 'Shivalik' | 'Udaigiri'
 export type OccupationStatus = 'working' | 'studying'
+export type Section = 'A' | 'B'
 
 export const STREAMS: Stream[] = ['PCM', 'PCB', 'Commerce', 'Arts', 'Others']
 export const HOUSES: House[] = ['Aravali', 'Nilgiri', 'Shivalik', 'Udaigiri']
+export const SECTIONS: Section[] = ['A', 'B']
 
 /** The one batch open in v1. Data model supports others; only this is live. */
 export const ACTIVE_BATCH = '2013–2020'
@@ -29,6 +31,7 @@ export interface Profile {
 
   stream: Stream // mandatory, always visible
   house: House // mandatory, always visible
+  section?: Section // optional, always visible once set
   hometown: string // mandatory, always visible
   city: string // mandatory, always visible — current city
   occupationStatus?: OccupationStatus // defaults to 'working' when job is set but this isn't
@@ -36,8 +39,6 @@ export interface Profile {
 
   instagram: string // mandatory
   instagramVisibility: OpenVisibility
-
-  linkedin?: string // always visible once set
 
   college?: string
   collegeVisibility: OpenVisibility

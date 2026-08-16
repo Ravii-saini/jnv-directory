@@ -26,7 +26,6 @@ export default function ProfileSetup() {
   const [instagram, setInstagram] = useState(profile?.instagram ?? '')
   const [instagramVisibility, setInstagramVisibility] = useState<Visibility>(profile?.instagramVisibility ?? 'batch')
 
-  const [linkedin, setLinkedin] = useState(profile?.linkedin ?? '')
 
   const [college, setCollege] = useState(profile?.college ?? '')
   const [collegeVisibility, setCollegeVisibility] = useState<Visibility>(profile?.collegeVisibility ?? 'batch')
@@ -67,7 +66,6 @@ export default function ProfileSetup() {
         job: job.trim() || undefined,
         instagram: instagram.trim(),
         instagramVisibility: instagramVisibility as 'batch' | 'anyone',
-        linkedin: linkedin.trim() || undefined,
         college: college.trim() || undefined,
         collegeVisibility: collegeVisibility as 'batch' | 'anyone',
         phoneVisibility,
@@ -187,14 +185,6 @@ export default function ProfileSetup() {
               value={job}
               onChange={(e) => setJob(e.target.value)}
             />
-          </div>
-          <span className="faint">Always visible to other verified members.</span>
-        </div>
-
-        <div className="card" style={{ marginBottom: 20 }}>
-          <div className="field" style={{ marginBottom: 0 }}>
-            <label htmlFor="linkedin">LinkedIn</label>
-            <input id="linkedin" className="input" value={linkedin} onChange={(e) => setLinkedin(e.target.value)} />
           </div>
           <span className="faint">Always visible to other verified members.</span>
         </div>
