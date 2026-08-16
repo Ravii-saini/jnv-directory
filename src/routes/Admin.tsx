@@ -13,6 +13,7 @@ import BottomNav from '../components/BottomNav'
 import { ACTIVE_BATCH, type Profile } from '../types'
 import { instagramHandle, instagramUrl } from '../lib/instagram'
 import { houseColor } from '../lib/houseColors'
+import { displayPhone } from '../lib/phone'
 
 function CheckIcon() {
   return (
@@ -142,7 +143,7 @@ export default function Admin() {
                   ) : (
                     '—'
                   )}{' '}
-                  · Phone: {m.phone} · {m.email}
+                  · Phone: {displayPhone(m.phone)} · {m.email}
                 </div>
                 <div style={{ display: 'flex', gap: 8 }}>
                   <button

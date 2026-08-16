@@ -7,6 +7,7 @@ import HouseBadge from '../components/HouseBadge'
 import type { Profile, ViewerContext } from '../types'
 import { canSeeField, occupationLabel } from '../types'
 import { instagramHandle, instagramUrl } from '../lib/instagram'
+import { displayPhone } from '../lib/phone'
 import { houseColor } from '../lib/houseColors'
 
 function Row({
@@ -137,7 +138,7 @@ export default function MemberProfile() {
             />
           )}
           {showEmail && <Row label="Email" value={member.email} />}
-          {showPhone && <Row label="Phone" value={member.phone} />}
+          {showPhone && <Row label="Phone" value={displayPhone(member.phone)} />}
           <Row label="Batch" value={member.batch} />
         </div>
       </div>

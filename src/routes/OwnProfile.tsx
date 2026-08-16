@@ -11,6 +11,7 @@ import WhatsAppButtons from '../components/WhatsAppButtons'
 import HouseBadge from '../components/HouseBadge'
 import { HOUSES, SECTIONS, STREAMS, occupationLabel, type House, type OccupationStatus, type Section, type Stream, type Visibility } from '../types'
 import { instagramHandle, instagramUrl } from '../lib/instagram'
+import { displayPhone } from '../lib/phone'
 import { houseColor } from '../lib/houseColors'
 
 export default function OwnProfile() {
@@ -180,7 +181,7 @@ export default function OwnProfile() {
                 display={profile.instagram ? instagramHandle(profile.instagram) : undefined}
               />
               <DetailRow label="Email" value={profile.email} />
-              <DetailRow label="Phone" value={profile.phone} />
+              <DetailRow label="Phone" value={displayPhone(profile.phone)} />
             </div>
             <div style={{ marginBottom: 20 }}>
               <WhatsAppButtons />
