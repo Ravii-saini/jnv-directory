@@ -3,7 +3,6 @@ import { useAuth } from '../contexts/AuthContext'
 import { subscribeApprovedMembers } from '../firebase/profiles'
 import MemberCard from '../components/MemberCard'
 import BottomNav from '../components/BottomNav'
-import WhatsAppButtons from '../components/WhatsAppButtons'
 import type { Profile, ViewerContext } from '../types'
 import { ACTIVE_BATCH } from '../types'
 
@@ -81,10 +80,6 @@ export default function Directory() {
               onChange={(e) => setSearch(e.target.value)}
             />
           </div>
-        </div>
-
-        <div style={{ marginBottom: 24 }}>
-          <WhatsAppButtons />
         </div>
 
         {filtered.length === 0 ? (
