@@ -1,5 +1,15 @@
 {
   "projects": {
     "default": "jnv-2020-directory"
-  }
+  },
+  "targets": {
+    "jnv-2020-directory": {
+      "hosting": {
+        "jnv-alwar-directory": [
+          "jnv-alwar-directory"
+        ]
+      }
+    }
+  },
+  "etags": {}
 }
