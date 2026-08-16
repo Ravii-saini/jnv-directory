@@ -3,8 +3,8 @@ import { useAuth } from '../contexts/AuthContext'
 import { subscribeApprovedMembers } from '../firebase/profiles'
 import MemberCard from '../components/MemberCard'
 import BottomNav from '../components/BottomNav'
-import type { House, Profile, ViewerContext } from '../types'
-import { ACTIVE_BATCH, HOUSES } from '../types'
+import type { House, Profile, Section, ViewerContext } from '../types'
+import { ACTIVE_BATCH, HOUSES, SECTIONS } from '../types'
 import { houseColor } from '../lib/houseColors'
 
 function SearchIcon() {
@@ -32,6 +32,7 @@ export default function Directory() {
   const [members, setMembers] = useState<Profile[]>([])
   const [search, setSearch] = useState('')
   const [houseFilter, setHouseFilter] = useState<House | null>(null)
+  const [sectionFilter, setSectionFilter] = useState<Section | null>(null)
 
   useEffect(() => {
     return subscribeApprovedMembers(ACTIVE_BATCH, setMembers)
@@ -47,11 +48,12 @@ export default function Directory() {
     const q = search.trim().toLowerCase()
     let others = members.filter((m) => m.uid !== profile?.uid)
     if (houseFilter) others = others.filter((m) => m.house === houseFilter)
+    if (sectionFilter) others = others.filter((m) => m.section === sectionFilter)
     if (!q) return others
     return others.filter(
       (m) => m.name.toLowerCase().includes(q) || m.city.toLowerCase().includes(q),
     )
-  }, [members, search, houseFilter, profile])
+  }, [members, search, houseFilter, sectionFilter, profile])
 
   const houseCounts = useMemo(() => {
     const counts: Record<House, number> = { Aravali: 0, Nilgiri: 0, Shivalik: 0, Udaigiri: 0 }
@@ -93,6 +95,26 @@ export default function Directory() {
           </button>
         )}
 
+        <div className="segmented" style={{ marginBottom: 16 }}>
+          <button
+            type="button"
+            className={`segmented-item${sectionFilter === null ? ' active' : ''}`}
+            onClick={() => setSectionFilter(null)}
+          >
+            All sections
+          </button>
+          {SECTIONS.map((s) => (
+            <button
+              key={s}
+              type="button"
+              className={`segmented-item${sectionFilter === s ? ' active' : ''}`}
+              onClick={() => setSectionFilter((cur) => (cur === s ? null : s))}
+            >
+              Section {s}
+            </button>
+          ))}
+        </div>
+
         <div className="field" style={{ marginBottom: 16 }}>
           <div style={{ position: 'relative' }}>
             <span
@@ -126,8 +148,8 @@ export default function Directory() {
             <p className="muted">
               {search
                 ? 'No one matches that search.'
-                : houseFilter
-                  ? `No other ${houseFilter} members yet.`
+                : houseFilter || sectionFilter
+                  ? `No other ${[houseFilter, sectionFilter && `Section ${sectionFilter}`].filter(Boolean).join(' · ')} members yet.`
                   : 'No other members yet.'}
             </p>
           </div>
