@@ -1,7 +1,8 @@
 import { useState } from 'react'
 import { useAuth } from '../contexts/AuthContext'
 import { submitRegistration } from '../firebase/profiles'
-import { HOUSES, STREAMS, type House, type Stream } from '../types'
+import OccupationToggle from '../components/OccupationToggle'
+import { HOUSES, STREAMS, type House, type OccupationStatus, type Stream } from '../types'
 
 export default function Register() {
   const { user } = useAuth()
@@ -13,6 +14,7 @@ export default function Register() {
   const [city, setCity] = useState('')
   const [instagram, setInstagram] = useState('')
   const [showOptional, setShowOptional] = useState(false)
+  const [occupationStatus, setOccupationStatus] = useState<OccupationStatus>('working')
   const [job, setJob] = useState('')
   const [linkedin, setLinkedin] = useState('')
   const [college, setCollege] = useState('')
@@ -42,6 +44,7 @@ export default function Register() {
         hometown: hometown.trim(),
         city: city.trim(),
         instagram: instagram.trim(),
+        occupationStatus: job.trim() ? occupationStatus : undefined,
         job: job.trim() || undefined,
         linkedin: linkedin.trim() || undefined,
         college: college.trim() || undefined,
@@ -160,8 +163,18 @@ export default function Register() {
           ) : (
             <>
               <div className="field">
-                <label htmlFor="job">Current job / company</label>
-                <input id="job" className="input" value={job} onChange={(e) => setJob(e.target.value)} />
+                <label htmlFor="job">Working or studying?</label>
+                <OccupationToggle value={occupationStatus} onChange={setOccupationStatus} />
+                <label htmlFor="job" style={{ marginTop: 4 }}>
+                  {occupationStatus === 'studying' ? 'Course' : 'Job title / company'}
+                </label>
+                <input
+                  id="job"
+                  className="input"
+                  placeholder={occupationStatus === 'studying' ? 'e.g. MBA at IIM Ahmedabad' : 'e.g. Software Engineer at Google'}
+                  value={job}
+                  onChange={(e) => setJob(e.target.value)}
+                />
               </div>
               <div className="field">
                 <label htmlFor="linkedin">LinkedIn</label>

@@ -4,7 +4,7 @@ import { useAuth } from '../contexts/AuthContext'
 import { getProfile } from '../firebase/profiles'
 import Avatar from '../components/Avatar'
 import type { Profile, ViewerContext } from '../types'
-import { canSeeField } from '../types'
+import { canSeeField, occupationLabel } from '../types'
 import { instagramHandle, instagramUrl } from '../lib/instagram'
 
 function Row({
@@ -104,7 +104,7 @@ export default function MemberProfile() {
           <Row label="House" value={member.house} />
           <Row label="12th Stream" value={member.stream} />
           <Row label="Hometown" value={member.hometown} />
-          <Row label="Current job / company" value={member.job} />
+          <Row label={occupationLabel(member.occupationStatus)} value={member.job} />
           {showCollege && <Row label="College" value={member.college} />}
           {showInstagram && member.instagram && (
             <Row

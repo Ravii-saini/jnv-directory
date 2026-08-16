@@ -5,7 +5,8 @@ import { uploadProfilePhoto } from '../firebase/photos'
 import { VisibilityPicker } from '../components/VisibilitySelector'
 import Avatar from '../components/Avatar'
 import AvatarPicker from '../components/AvatarPicker'
-import type { Visibility } from '../types'
+import OccupationToggle from '../components/OccupationToggle'
+import type { OccupationStatus, Visibility } from '../types'
 
 export default function ProfileSetup() {
   const { user, profile } = useAuth()
@@ -19,6 +20,7 @@ export default function ProfileSetup() {
   const [bio, setBio] = useState(profile?.bio ?? '')
   const [bioVisibility, setBioVisibility] = useState<Visibility>(profile?.bioVisibility ?? 'batch')
 
+  const [occupationStatus, setOccupationStatus] = useState<OccupationStatus>(profile?.occupationStatus ?? 'working')
   const [job, setJob] = useState(profile?.job ?? '')
 
   const [instagram, setInstagram] = useState(profile?.instagram ?? '')
@@ -61,6 +63,7 @@ export default function ProfileSetup() {
         photoVisibility: photoVisibility as 'batch' | 'anyone',
         bio: bio.trim() || undefined,
         bioVisibility: bioVisibility as 'batch' | 'anyone',
+        occupationStatus: job.trim() ? occupationStatus : undefined,
         job: job.trim() || undefined,
         instagram: instagram.trim(),
         instagramVisibility: instagramVisibility as 'batch' | 'anyone',
@@ -171,9 +174,19 @@ export default function ProfileSetup() {
         </div>
 
         <div className="card" style={{ marginBottom: 20 }}>
+          <label style={{ fontSize: 13, fontWeight: 600, color: 'var(--text-muted)', marginBottom: 6, display: 'block' }}>
+            Working or studying?
+          </label>
+          <OccupationToggle value={occupationStatus} onChange={setOccupationStatus} />
           <div className="field" style={{ marginBottom: 0 }}>
-            <label htmlFor="job">Current job / company</label>
-            <input id="job" className="input" value={job} onChange={(e) => setJob(e.target.value)} />
+            <label htmlFor="job">{occupationStatus === 'studying' ? 'Course' : 'Job title / company'}</label>
+            <input
+              id="job"
+              className="input"
+              placeholder={occupationStatus === 'studying' ? 'e.g. MBA at IIM Ahmedabad' : 'e.g. Software Engineer at Google'}
+              value={job}
+              onChange={(e) => setJob(e.target.value)}
+            />
           </div>
           <span className="faint">Always visible to other verified members.</span>
         </div>

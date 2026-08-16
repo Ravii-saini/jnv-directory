@@ -5,9 +5,10 @@ import { uploadProfilePhoto } from '../firebase/photos'
 import { VisibilityPicker } from '../components/VisibilitySelector'
 import Avatar from '../components/Avatar'
 import AvatarPicker from '../components/AvatarPicker'
+import OccupationToggle from '../components/OccupationToggle'
 import BottomNav from '../components/BottomNav'
 import WhatsAppButtons from '../components/WhatsAppButtons'
-import { HOUSES, STREAMS, type House, type Stream, type Visibility } from '../types'
+import { HOUSES, STREAMS, occupationLabel, type House, type OccupationStatus, type Stream, type Visibility } from '../types'
 import { instagramHandle, instagramUrl } from '../lib/instagram'
 
 export default function OwnProfile() {
@@ -26,6 +27,7 @@ export default function OwnProfile() {
     house: (profile?.house ?? HOUSES[0]) as House,
     hometown: profile?.hometown ?? '',
     city: profile?.city ?? '',
+    occupationStatus: (profile?.occupationStatus ?? 'working') as OccupationStatus,
     job: profile?.job ?? '',
     instagram: profile?.instagram ?? '',
     instagramVisibility: (profile?.instagramVisibility ?? 'batch') as Visibility,
@@ -70,6 +72,7 @@ export default function OwnProfile() {
         house: form.house,
         hometown: form.hometown.trim(),
         city: form.city.trim(),
+        occupationStatus: form.job.trim() ? form.occupationStatus : undefined,
         job: form.job.trim() || undefined,
         instagram: form.instagram.trim(),
         instagramVisibility: form.instagramVisibility as 'batch' | 'anyone',
@@ -155,7 +158,7 @@ export default function OwnProfile() {
               <DetailRow label="House" value={profile.house} />
               <DetailRow label="12th Stream" value={profile.stream} />
               <DetailRow label="Hometown" value={profile.hometown} />
-              <DetailRow label="Job / company" value={profile.job} />
+              <DetailRow label={occupationLabel(profile.occupationStatus)} value={profile.job} />
               <DetailRow label="College" value={profile.college} />
               <DetailRow
                 label="Instagram"
@@ -214,8 +217,15 @@ export default function OwnProfile() {
               <input className="input" value={form.city} onChange={(e) => set('city', e.target.value)} />
             </div>
             <div className="field">
-              <label>Job / company</label>
-              <input className="input" value={form.job} onChange={(e) => set('job', e.target.value)} />
+              <label>Working or studying?</label>
+              <OccupationToggle value={form.occupationStatus} onChange={(v) => set('occupationStatus', v)} />
+              <label>{form.occupationStatus === 'studying' ? 'Course' : 'Job title / company'}</label>
+              <input
+                className="input"
+                placeholder={form.occupationStatus === 'studying' ? 'e.g. MBA at IIM Ahmedabad' : 'e.g. Software Engineer at Google'}
+                value={form.job}
+                onChange={(e) => set('job', e.target.value)}
+              />
             </div>
 
             <div className="card" style={{ marginBottom: 18 }}>

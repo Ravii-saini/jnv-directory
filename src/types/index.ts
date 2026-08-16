@@ -3,6 +3,7 @@ export type OpenVisibility = 'batch' | 'anyone'
 export type MemberStatus = 'pending' | 'approved' | 'rejected' | 'removed'
 export type Stream = 'PCM' | 'PCB' | 'Commerce' | 'Arts' | 'Others'
 export type House = 'Aravali' | 'Nilgiri' | 'Shivalik' | 'Udaigiri'
+export type OccupationStatus = 'working' | 'studying'
 
 export const STREAMS: Stream[] = ['PCM', 'PCB', 'Commerce', 'Arts', 'Others']
 export const HOUSES: House[] = ['Aravali', 'Nilgiri', 'Shivalik', 'Udaigiri']
@@ -30,7 +31,8 @@ export interface Profile {
   house: House // mandatory, always visible
   hometown: string // mandatory, always visible
   city: string // mandatory, always visible — current city
-  job?: string // always visible once set
+  occupationStatus?: OccupationStatus // defaults to 'working' when job is set but this isn't
+  job?: string // company name if working, course/institution if studying — always visible once set
 
   instagram: string // mandatory
   instagramVisibility: OpenVisibility
@@ -76,6 +78,10 @@ export interface ViewerContext {
   viewerBatch: string
   isSelf: boolean
   isAdmin: boolean
+}
+
+export function occupationLabel(status: OccupationStatus | undefined): string {
+  return status === 'studying' ? 'Course' : 'Job / company'
 }
 
 export function canSeeField(
