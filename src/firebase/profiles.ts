@@ -15,6 +15,13 @@ import { ACTIVE_BATCH, type Profile } from '../types'
 
 const profilesCol = collection(db, 'profiles')
 
+/** Firestore rejects `undefined` field values outright, unlike `null`. */
+function stripUndefined<T extends object>(obj: T): Partial<T> {
+  return Object.fromEntries(
+    Object.entries(obj).filter(([, v]) => v !== undefined),
+  ) as Partial<T>
+}
+
 export async function getProfile(uid: string): Promise<Profile | null> {
   const snap = await getDoc(doc(profilesCol, uid))
   return snap.exists() ? (snap.data() as Profile) : null
@@ -65,25 +72,28 @@ export async function submitRegistration(
     createdAt: Date.now(),
     updatedAt: Date.now(),
   }
-  await setDoc(doc(profilesCol, uid), profile)
+  await setDoc(doc(profilesCol, uid), stripUndefined(profile))
 }
 
 export async function saveProfileSetup(
   uid: string,
   patch: Partial<Profile>,
 ): Promise<void> {
-  await updateDoc(doc(profilesCol, uid), {
-    ...patch,
-    profileSetupDone: true,
-    updatedAt: Date.now(),
-  })
+  await updateDoc(
+    doc(profilesCol, uid),
+    stripUndefined({
+      ...patch,
+      profileSetupDone: true,
+      updatedAt: Date.now(),
+    }),
+  )
 }
 
 export async function updateProfile(
   uid: string,
   patch: Partial<Profile>,
 ): Promise<void> {
-  await updateDoc(doc(profilesCol, uid), { ...patch, updatedAt: Date.now() })
+  await updateDoc(doc(profilesCol, uid), stripUndefined({ ...patch, updatedAt: Date.now() }))
 }
 
 export async function markHomeScreenPromptSeen(uid: string): Promise<void> {
