@@ -75,25 +75,17 @@ export default function Register() {
 
           <div className="field">
             <label htmlFor="phone">Phone number *</label>
-            <div style={{ display: 'flex', gap: 8 }}>
-              <span
-                className="input"
-                style={{ width: 56, flexShrink: 0, textAlign: 'center', color: 'var(--text-muted)' }}
-              >
-                +91
-              </span>
-              <input
-                id="phone"
-                className="input"
-                type="tel"
-                inputMode="numeric"
-                placeholder="98765 43210"
-                maxLength={10}
-                value={phone}
-                onChange={(e) => setPhone(e.target.value.replace(/\D/g, '').slice(0, 10))}
-                required
-              />
-            </div>
+            <input
+              id="phone"
+              className="input"
+              type="tel"
+              inputMode="numeric"
+              placeholder="98765 43210"
+              maxLength={10}
+              value={phone}
+              onChange={(e) => setPhone(e.target.value.replace(/\D/g, '').slice(0, 10))}
+              required
+            />
             <span className="hint">Defaults to private — only you (and the admin) can see it.</span>
           </div>
 
