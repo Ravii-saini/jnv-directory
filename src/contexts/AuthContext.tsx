@@ -8,7 +8,7 @@ import {
 } from 'react'
 import { onAuthStateChanged, signOut as firebaseSignOut, type User } from 'firebase/auth'
 import { auth } from '../firebase/config'
-import { subscribeProfile } from '../firebase/profiles'
+import { subscribeProfile, updateProfile } from '../firebase/profiles'
 import { notifyLocally } from '../lib/localNotify'
 import type { Profile } from '../types'
 
@@ -73,6 +73,15 @@ export function AuthProvider({ children }: { children: ReactNode }) {
     })
     return unsub
   }, [user])
+
+  // Self-heal legacy profiles created before the `email` field existed.
+  useEffect(() => {
+    if (!user?.email || !profile) return
+    if (profile.email) return
+    updateProfile(user.uid, { email: user.email, emailVisibility: profile.emailVisibility ?? 'batch' }).catch(
+      (err) => console.error('Failed to backfill email:', err),
+    )
+  }, [user, profile])
 
   let stage: AppStage = 'loading'
   if (authResolved && profileResolved) {
