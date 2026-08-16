@@ -12,13 +12,13 @@ export default function Landing() {
   const [loading, setLoading] = useState(false)
   const [error, setError] = useState<string | null>(null)
 
-  const e164 = phone.trim().startsWith('+') ? phone.trim() : `+91${phone.trim()}`
+  const e164 = `+91${phone}`
 
   const handleSendOtp = async (e: React.FormEvent) => {
     e.preventDefault()
     setError(null)
-    if (phone.replace(/\D/g, '').length < 10) {
-      setError('Enter a valid phone number.')
+    if (phone.length !== 10) {
+      setError('Enter a valid 10-digit phone number.')
       return
     }
     setLoading(true)
@@ -73,20 +73,29 @@ export default function Landing() {
         <form onSubmit={handleSendOtp}>
           <div className="field">
             <label htmlFor="phone">Phone number</label>
-            <input
-              id="phone"
-              className="input"
-              type="tel"
-              inputMode="tel"
-              autoComplete="tel"
-              placeholder="+91 98765 43210"
-              value={phone}
-              onChange={(e) => setPhone(e.target.value)}
-            />
+            <div style={{ display: 'flex', gap: 8 }}>
+              <span
+                className="input"
+                style={{ width: 56, flexShrink: 0, textAlign: 'center', color: 'var(--text-muted)' }}
+              >
+                +91
+              </span>
+              <input
+                id="phone"
+                className="input"
+                type="tel"
+                inputMode="numeric"
+                autoComplete="tel-national"
+                placeholder="98765 43210"
+                maxLength={10}
+                value={phone}
+                onChange={(e) => setPhone(e.target.value.replace(/\D/g, '').slice(0, 10))}
+              />
+            </div>
             <span className="hint">We'll text you a one-time code. No password needed.</span>
           </div>
           {error && <p style={{ color: 'var(--danger)', fontSize: 13, marginBottom: 14 }}>{error}</p>}
-          <button className="btn btn-primary" type="submit" disabled={loading}>
+          <button className="btn btn-primary" type="submit" disabled={loading || phone.length !== 10}>
             {loading ? <span className="spinner" /> : 'Send code'}
           </button>
         </form>
