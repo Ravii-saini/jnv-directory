@@ -505,6 +505,39 @@ p {
   font-weight: 600;
 }
 
+/* ---------- house cup ---------- */
+
+.house-cup {
+  display: grid;
+  grid-template-columns: repeat(4, 1fr);
+  gap: 8px;
+}
+
+.house-tile {
+  background: color-mix(in srgb, var(--house-c) 10%, var(--glass-bg));
+  border: 1px solid color-mix(in srgb, var(--house-c) 28%, var(--glass-border));
+  border-radius: var(--radius-sm);
+  padding: 10px 6px;
+  text-align: center;
+}
+
+.house-tile-count {
+  font-size: 20px;
+  font-weight: 800;
+  color: var(--house-c);
+  letter-spacing: -0.02em;
+}
+
+.house-tile-label {
+  font-size: 10.5px;
+  font-weight: 650;
+  color: var(--text-muted);
+  margin-top: 1px;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+
 /* ---------- cards (glass) ---------- */
 
 .card {

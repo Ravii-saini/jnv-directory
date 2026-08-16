@@ -8,8 +8,10 @@ import AvatarPicker from '../components/AvatarPicker'
 import OccupationToggle from '../components/OccupationToggle'
 import BottomNav from '../components/BottomNav'
 import WhatsAppButtons from '../components/WhatsAppButtons'
+import HouseBadge from '../components/HouseBadge'
 import { HOUSES, STREAMS, occupationLabel, type House, type OccupationStatus, type Stream, type Visibility } from '../types'
 import { instagramHandle, instagramUrl } from '../lib/instagram'
+import { houseColor } from '../lib/houseColors'
 
 export default function OwnProfile() {
   const { user, profile, signOut } = useAuth()
@@ -112,7 +114,7 @@ export default function OwnProfile() {
 
       <div className="screen-content has-bottom-nav">
         <div style={{ display: 'flex', flexDirection: 'column', alignItems: 'center', marginBottom: 24 }}>
-          <Avatar name={form.name} photoUrl={form.photoUrl} size={96} />
+          <Avatar name={form.name} photoUrl={form.photoUrl} size={96} ringColor={houseColor(form.house)} />
           {editing && (
             <>
               <div style={{ display: 'flex', gap: 8, marginTop: 12, flexWrap: 'wrap', justifyContent: 'center' }}>
@@ -147,8 +149,18 @@ export default function OwnProfile() {
 
         {!editing ? (
           <>
-            <div className="card" style={{ marginBottom: 20 }}>
-              <h2 style={{ fontSize: 18, fontWeight: 800, marginBottom: 4 }}>{profile.name}</h2>
+            <div
+              className="card"
+              style={{
+                marginBottom: 20,
+                background: `linear-gradient(135deg, color-mix(in srgb, ${houseColor(profile.house)} 16%, transparent), transparent 65%), var(--glass-bg)`,
+                borderColor: `color-mix(in srgb, ${houseColor(profile.house)} 30%, var(--glass-border))`,
+              }}
+            >
+              <div style={{ display: 'flex', alignItems: 'center', gap: 8, marginBottom: 4 }}>
+                <h2 style={{ fontSize: 18, fontWeight: 800 }}>{profile.name}</h2>
+                <HouseBadge house={profile.house} />
+              </div>
               <p className="muted" style={{ fontSize: 14, marginBottom: 12 }}>
                 {profile.city} · Batch {profile.batch}
               </p>

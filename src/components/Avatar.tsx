@@ -11,13 +11,18 @@ export default function Avatar({
   name,
   photoUrl,
   size = 48,
+  ringColor,
 }: {
   name: string
   photoUrl?: string
   size?: number
+  /** e.g. a house color — draws the ring in this color instead of the neutral default. */
+  ringColor?: string
 }) {
   const ring = {
-    boxShadow: `0 0 0 2px var(--bg-elevated), 0 0 0 3px var(--border-soft)`,
+    boxShadow: ringColor
+      ? `0 0 0 2px var(--bg-elevated), 0 0 0 3.5px ${ringColor}`
+      : `0 0 0 2px var(--bg-elevated), 0 0 0 3px var(--border-soft)`,
   }
 
   if (photoUrl) {

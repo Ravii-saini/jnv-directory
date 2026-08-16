@@ -2,6 +2,7 @@ import { Link } from 'react-router-dom'
 import Avatar from './Avatar'
 import type { Profile, ViewerContext } from '../types'
 import { canSeeField } from '../types'
+import { houseColor } from '../lib/houseColors'
 
 export default function MemberCard({
   member,
@@ -24,7 +25,12 @@ export default function MemberCard({
         color: 'var(--text)',
       }}
     >
-      <Avatar name={member.name} photoUrl={showPhoto ? member.photoUrl : undefined} size={52} />
+      <Avatar
+        name={member.name}
+        photoUrl={showPhoto ? member.photoUrl : undefined}
+        size={52}
+        ringColor={houseColor(member.house)}
+      />
       <div style={{ minWidth: 0, flex: 1 }}>
         <div style={{ fontWeight: 700, fontSize: 15, overflow: 'hidden', textOverflow: 'ellipsis', whiteSpace: 'nowrap' }}>
           {member.name}

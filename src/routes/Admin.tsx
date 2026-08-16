@@ -12,6 +12,7 @@ import Avatar from '../components/Avatar'
 import BottomNav from '../components/BottomNav'
 import { ACTIVE_BATCH, type Profile } from '../types'
 import { instagramHandle, instagramUrl } from '../lib/instagram'
+import { houseColor } from '../lib/houseColors'
 
 function CheckIcon() {
   return (
@@ -116,7 +117,7 @@ export default function Admin() {
             {pending.map((m, i) => (
               <div key={m.uid} className="card stagger-item" style={{ '--i': i } as CSSProperties}>
                 <div style={{ display: 'flex', alignItems: 'center', gap: 12, marginBottom: 12 }}>
-                  <Avatar name={m.name} photoUrl={m.photoUrl} size={44} />
+                  <Avatar name={m.name} photoUrl={m.photoUrl} size={44} ringColor={houseColor(m.house)} />
                   <div style={{ flex: 1, minWidth: 0 }}>
                     <div style={{ fontWeight: 700 }}>{m.name}</div>
                     <div className="faint">
@@ -174,7 +175,7 @@ export default function Admin() {
                 className="card stagger-item"
                 style={{ display: 'flex', alignItems: 'center', gap: 12, '--i': i } as CSSProperties}
               >
-                <Avatar name={m.name} photoUrl={m.photoUrl} size={44} />
+                <Avatar name={m.name} photoUrl={m.photoUrl} size={44} ringColor={houseColor(m.house)} />
                 <div style={{ flex: 1, minWidth: 0 }}>
                   <div style={{ fontWeight: 700, display: 'flex', alignItems: 'center', gap: 6 }}>
                     {m.name}

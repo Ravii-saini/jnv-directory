@@ -31,6 +31,12 @@
   --glass-blur: 22px;
   --noise-opacity: 0.025;
 
+  /* JNV Alwar house colors */
+  --house-aravali: #2563eb;
+  --house-nilgiri: #16a34a;
+  --house-shivalik: #dc2626;
+  --house-udaigiri: #ca8a04;
+
   --radius-sm: 12px;
   --radius-md: 18px;
   --radius-lg: 24px;
@@ -74,6 +80,11 @@
     --glass-bg-strong: rgba(24, 28, 42, 0.75);
     --glass-border: rgba(255, 255, 255, 0.09);
     --noise-opacity: 0.05;
+
+    --house-aravali: #60a5fa;
+    --house-nilgiri: #4ade80;
+    --house-shivalik: #f87171;
+    --house-udaigiri: #fbbf24;
   }
 }
 
@@ -108,4 +119,9 @@
   --glass-bg-strong: rgba(24, 28, 42, 0.75);
   --glass-border: rgba(255, 255, 255, 0.09);
   --noise-opacity: 0.05;
+
+  --house-aravali: #60a5fa;
+  --house-nilgiri: #4ade80;
+  --house-shivalik: #f87171;
+  --house-udaigiri: #fbbf24;
 }

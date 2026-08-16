@@ -3,9 +3,11 @@ import { useNavigate, useParams } from 'react-router-dom'
 import { useAuth } from '../contexts/AuthContext'
 import { getProfile } from '../firebase/profiles'
 import Avatar from '../components/Avatar'
+import HouseBadge from '../components/HouseBadge'
 import type { Profile, ViewerContext } from '../types'
 import { canSeeField, occupationLabel } from '../types'
 import { instagramHandle, instagramUrl } from '../lib/instagram'
+import { houseColor } from '../lib/houseColors'
 
 function Row({
   label,
@@ -91,10 +93,29 @@ export default function MemberProfile() {
         </button>
       </div>
       <div className="screen-content">
-        <div style={{ display: 'flex', flexDirection: 'column', alignItems: 'center', textAlign: 'center', marginBottom: 24 }}>
-          <Avatar name={member.name} photoUrl={showPhoto ? member.photoUrl : undefined} size={96} />
+        <div
+          className="card"
+          style={{
+            display: 'flex',
+            flexDirection: 'column',
+            alignItems: 'center',
+            textAlign: 'center',
+            marginBottom: 24,
+            background: `linear-gradient(180deg, color-mix(in srgb, ${houseColor(member.house)} 18%, transparent), transparent 60%), var(--glass-bg)`,
+            borderColor: `color-mix(in srgb, ${houseColor(member.house)} 30%, var(--glass-border))`,
+          }}
+        >
+          <Avatar
+            name={member.name}
+            photoUrl={showPhoto ? member.photoUrl : undefined}
+            size={96}
+            ringColor={houseColor(member.house)}
+          />
           <h1 style={{ fontSize: 22, fontWeight: 800, marginTop: 14 }}>{member.name}</h1>
-          <p className="muted" style={{ fontSize: 14, marginTop: 2 }}>
+          <div style={{ marginTop: 6 }}>
+            <HouseBadge house={member.house} />
+          </div>
+          <p className="muted" style={{ fontSize: 14, marginTop: 8 }}>
             {member.city}
           </p>
           {showBio && member.bio && <p style={{ marginTop: 12, fontSize: 14 }}>{member.bio}</p>}

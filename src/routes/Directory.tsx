@@ -3,8 +3,9 @@ import { useAuth } from '../contexts/AuthContext'
 import { subscribeApprovedMembers } from '../firebase/profiles'
 import MemberCard from '../components/MemberCard'
 import BottomNav from '../components/BottomNav'
-import type { Profile, ViewerContext } from '../types'
-import { ACTIVE_BATCH } from '../types'
+import type { House, Profile, ViewerContext } from '../types'
+import { ACTIVE_BATCH, HOUSES } from '../types'
+import { houseColor } from '../lib/houseColors'
 
 function SearchIcon() {
   return (
@@ -50,6 +51,12 @@ export default function Directory() {
     )
   }, [members, search, profile])
 
+  const houseCounts = useMemo(() => {
+    const counts: Record<House, number> = { Aravali: 0, Nilgiri: 0, Shivalik: 0, Udaigiri: 0 }
+    for (const m of members) counts[m.house]++
+    return counts
+  }, [members])
+
   return (
     <div className="screen">
       <div className="topbar">
@@ -57,6 +64,15 @@ export default function Directory() {
         <span className="badge badge-neutral">{members.length} members</span>
       </div>
       <div className="screen-content has-bottom-nav">
+        <div className="house-cup" style={{ marginBottom: 18 }}>
+          {HOUSES.map((h) => (
+            <div key={h} className="house-tile" style={{ '--house-c': houseColor(h) } as CSSProperties}>
+              <div className="house-tile-count">{houseCounts[h]}</div>
+              <div className="house-tile-label">{h}</div>
+            </div>
+          ))}
+        </div>
+
         <div className="field" style={{ marginBottom: 16 }}>
           <div style={{ position: 'relative' }}>
             <span
