@@ -1,0 +1,69 @@
+rules_version = '2';
+
+service cloud.firestore {
+  match /databases/{database}/documents {
+
+    function isSignedIn() {
+      return request.auth != null;
+    }
+
+    function isOwner(uid) {
+      return isSignedIn() && request.auth.uid == uid;
+    }
+
+    function callerProfile() {
+      return get(/databases/$(database)/documents/profiles/$(request.auth.uid)).data;
+    }
+
+    function isApprovedCaller() {
+      return isSignedIn()
+        && exists(/databases/$(database)/documents/profiles/$(request.auth.uid))
+        && callerProfile().status == 'approved';
+    }
+
+    function isAdminCaller() {
+      return isSignedIn()
+        && exists(/databases/$(database)/documents/profiles/$(request.auth.uid))
+        && callerProfile().status == 'approved'
+        && callerProfile().isAdmin == true;
+    }
+
+    match /profiles/{uid} {
+      // Reads: your own doc always; anyone else's only if you're an approved
+      // member (field-level filtering of what's *shown* happens client-side,
+      // but only approved members can read profiles at all).
+      allow read: if isOwner(uid) || isApprovedCaller();
+
+      // First-time registration: a signed-in user creates their own doc,
+      // and it must start life as 'pending' with no admin/status escalation.
+      allow create: if isOwner(uid)
+        && request.resource.data.uid == uid
+        && request.resource.data.status == 'pending'
+        && request.resource.data.isAdmin != true;
+
+      // Self-edits: owner can update their own doc, but can never touch
+      // status or isAdmin — that's an admin-only escalation path.
+      allow update: if isOwner(uid)
+        && request.resource.data.status == resource.data.status
+        && request.resource.data.isAdmin == resource.data.isAdmin
+        && request.resource.data.uid == resource.data.uid
+        || isAdminCaller();
+
+      allow delete: if false; // soft-remove only, never hard-delete
+    }
+
+    match /batchConfig/{batch} {
+      allow read: if isApprovedCaller();
+      allow write: if isAdminCaller();
+    }
+
+    match /appConfig/{doc} {
+      allow read: if isApprovedCaller();
+      allow write: if isAdminCaller();
+    }
+
+    match /{document=**} {
+      allow read, write: if false;
+    }
+  }
+}
