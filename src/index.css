@@ -257,6 +257,68 @@ p {
   min-height: 80px;
 }
 
+/* ---------- segmented control ---------- */
+
+.segmented {
+  display: flex;
+  gap: 4px;
+  padding: 4px;
+  background: var(--bg-sunken);
+  border-radius: var(--radius-pill);
+  margin-bottom: 20px;
+}
+
+.segmented-item {
+  flex: 1;
+  border: none;
+  background: transparent;
+  color: var(--text-muted);
+  font-weight: 650;
+  font-size: 13px;
+  padding: 9px 10px;
+  border-radius: var(--radius-pill);
+  transition: background-color 0.18s ease, color 0.18s ease, box-shadow 0.18s ease;
+}
+
+.segmented-item.active {
+  background: var(--bg-elevated);
+  color: var(--accent);
+  box-shadow: var(--shadow);
+}
+
+/* ---------- stat tiles ---------- */
+
+.stat-row {
+  display: flex;
+  gap: 10px;
+  margin-bottom: 20px;
+}
+
+.stat-tile {
+  flex: 1;
+  background: var(--bg-elevated);
+  border: 1px solid var(--border-soft);
+  border-radius: var(--radius-md);
+  padding: 14px 16px;
+  box-shadow: var(--shadow);
+}
+
+.stat-tile .stat-value {
+  font-size: 22px;
+  font-weight: 800;
+  letter-spacing: -0.02em;
+  background: linear-gradient(135deg, var(--accent), var(--accent-2));
+  -webkit-background-clip: text;
+  background-clip: text;
+  color: transparent;
+}
+
+.stat-tile .stat-label {
+  font-size: 12px;
+  color: var(--text-muted);
+  font-weight: 600;
+}
+
 /* ---------- cards ---------- */
 
 .card {

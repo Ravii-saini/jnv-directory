@@ -12,6 +12,28 @@ import Avatar from '../components/Avatar'
 import BottomNav from '../components/BottomNav'
 import { ACTIVE_BATCH, type Profile } from '../types'
 
+function CheckIcon() {
+  return (
+    <svg width="16" height="16" viewBox="0 0 24 24" fill="none">
+      <path d="M20 6 9 17l-5-5" stroke="currentColor" strokeWidth="2.4" strokeLinecap="round" strokeLinejoin="round" />
+    </svg>
+  )
+}
+
+function InboxIcon() {
+  return (
+    <svg width="38" height="38" viewBox="0 0 24 24" fill="none">
+      <path
+        d="M4 12h4l1.5 3h5L16 12h4M4 12l1.8-6.3A1 1 0 0 1 6.75 5h10.5a1 1 0 0 1 .95.7L20 12M4 12v6a1 1 0 0 0 1 1h14a1 1 0 0 0 1-1v-6"
+        stroke="currentColor"
+        strokeWidth="1.6"
+        strokeLinecap="round"
+        strokeLinejoin="round"
+      />
+    </svg>
+  )
+}
+
 export default function Admin() {
   const { profile } = useAuth()
   const [pending, setPending] = useState<Profile[]>([])
@@ -45,27 +67,36 @@ export default function Admin() {
     <div className="screen">
       <div className="topbar">
         <h1>Admin</h1>
+        {pending.length > 0 && <span className="badge badge-warning">{pending.length} waiting</span>}
       </div>
       <div className="screen-content" style={{ paddingBottom: 24 }}>
-        <div style={{ display: 'flex', gap: 8, marginBottom: 20 }}>
+        <div className="stat-row">
+          <div className="stat-tile">
+            <div className="stat-value">{activeMembers.length}</div>
+            <div className="stat-label">Active members</div>
+          </div>
+          <div className="stat-tile">
+            <div className="stat-value">{pending.length}</div>
+            <div className="stat-label">Pending review</div>
+          </div>
+        </div>
+
+        <div className="segmented">
           <button
-            className={tab === 'pending' ? 'btn btn-primary btn-sm' : 'btn btn-secondary btn-sm'}
+            className={`segmented-item${tab === 'pending' ? ' active' : ''}`}
             onClick={() => setTab('pending')}
-            style={{ flex: 1 }}
           >
             Pending ({pending.length})
           </button>
           <button
-            className={tab === 'members' ? 'btn btn-primary btn-sm' : 'btn btn-secondary btn-sm'}
+            className={`segmented-item${tab === 'members' ? ' active' : ''}`}
             onClick={() => setTab('members')}
-            style={{ flex: 1 }}
           >
             Members ({activeMembers.length})
           </button>
           <button
-            className={tab === 'links' ? 'btn btn-primary btn-sm' : 'btn btn-secondary btn-sm'}
+            className={`segmented-item${tab === 'links' ? ' active' : ''}`}
             onClick={() => setTab('links')}
-            style={{ flex: 1 }}
           >
             Links
           </button>
@@ -73,7 +104,14 @@ export default function Admin() {
 
         {tab === 'pending' && (
           <div style={{ display: 'flex', flexDirection: 'column', gap: 10 }}>
-            {pending.length === 0 && <p className="muted">No pending requests.</p>}
+            {pending.length === 0 && (
+              <div style={{ textAlign: 'center', padding: '48px 0', color: 'var(--text-faint)' }}>
+                <div style={{ display: 'flex', justifyContent: 'center', marginBottom: 12 }}>
+                  <InboxIcon />
+                </div>
+                <p className="muted">No pending requests.</p>
+              </div>
+            )}
             {pending.map((m) => (
               <div key={m.uid} className="card">
                 <div style={{ display: 'flex', alignItems: 'center', gap: 12, marginBottom: 12 }}>
@@ -85,7 +123,15 @@ export default function Admin() {
                     </div>
                   </div>
                 </div>
-                <div className="faint" style={{ marginBottom: 12 }}>
+                <div
+                  className="faint"
+                  style={{
+                    marginBottom: 14,
+                    background: 'var(--bg-sunken)',
+                    borderRadius: 'var(--radius-sm)',
+                    padding: '8px 10px',
+                  }}
+                >
                   IG: {m.instagram} · Phone: {m.phone}
                 </div>
                 <div style={{ display: 'flex', gap: 8 }}>
@@ -117,7 +163,10 @@ export default function Admin() {
               <div key={m.uid} className="card" style={{ display: 'flex', alignItems: 'center', gap: 12 }}>
                 <Avatar name={m.name} photoUrl={m.photoUrl} size={44} />
                 <div style={{ flex: 1, minWidth: 0 }}>
-                  <div style={{ fontWeight: 700 }}>{m.name}</div>
+                  <div style={{ fontWeight: 700, display: 'flex', alignItems: 'center', gap: 6 }}>
+                    {m.name}
+                    {m.isAdmin && <span className="badge badge-success">Admin</span>}
+                  </div>
                   <div className="faint">{m.city}</div>
                 </div>
                 {!m.isAdmin && (
@@ -181,7 +230,13 @@ function LinksEditor() {
         <input className="input" value={alumniLink} onChange={(e) => setAlumniLinkState(e.target.value)} />
       </div>
       <button className="btn btn-primary" onClick={save} disabled={saving}>
-        {saving ? <span className="spinner" /> : saved ? 'Saved ✓' : 'Save links'}
+        {saving ? <span className="spinner" /> : saved ? (
+          <>
+            <CheckIcon /> Saved
+          </>
+        ) : (
+          'Save links'
+        )}
       </button>
     </div>
   )
