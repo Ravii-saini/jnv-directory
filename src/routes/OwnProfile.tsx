@@ -183,6 +183,11 @@ export default function OwnProfile() {
             <div className="field">
               <label>12th stream</label>
               <select className="select" value={form.stream} onChange={(e) => set('stream', e.target.value as Stream)}>
+                {!STREAMS.includes(form.stream) && (
+                  <option value={form.stream} disabled>
+                    {form.stream} (old value — please choose one below)
+                  </option>
+                )}
                 {STREAMS.map((s) => (
                   <option key={s} value={s}>
                     {s}
