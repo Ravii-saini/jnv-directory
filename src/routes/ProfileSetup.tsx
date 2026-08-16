@@ -4,6 +4,7 @@ import { saveProfileSetup } from '../firebase/profiles'
 import { uploadProfilePhoto } from '../firebase/photos'
 import { VisibilityPicker } from '../components/VisibilitySelector'
 import Avatar from '../components/Avatar'
+import AvatarPicker from '../components/AvatarPicker'
 import type { Visibility } from '../types'
 
 export default function ProfileSetup() {
@@ -12,6 +13,7 @@ export default function ProfileSetup() {
   const [photoUrl, setPhotoUrl] = useState(profile?.photoUrl)
   const [photoVisibility, setPhotoVisibility] = useState<Visibility>(profile?.photoVisibility ?? 'batch')
   const [uploading, setUploading] = useState(false)
+  const [showAvatarPicker, setShowAvatarPicker] = useState(false)
   const fileRef = useRef<HTMLInputElement>(null)
 
   const [bio, setBio] = useState(profile?.bio ?? '')
@@ -87,14 +89,21 @@ export default function ProfileSetup() {
         <div className="card" style={{ marginBottom: 20 }}>
           <div style={{ display: 'flex', alignItems: 'center', gap: 16, marginBottom: 14 }}>
             <Avatar name={profile.name} photoUrl={photoUrl} size={64} />
-            <div>
+            <div style={{ display: 'flex', flexWrap: 'wrap', gap: 8 }}>
               <button
                 type="button"
                 className="btn btn-secondary btn-sm"
                 onClick={() => fileRef.current?.click()}
                 disabled={uploading}
               >
-                {uploading ? 'Uploading…' : photoUrl ? 'Change photo' : 'Add photo'}
+                {uploading ? 'Uploading…' : 'Upload photo'}
+              </button>
+              <button
+                type="button"
+                className="btn btn-secondary btn-sm"
+                onClick={() => setShowAvatarPicker((v) => !v)}
+              >
+                {showAvatarPicker ? 'Hide avatars' : 'Choose an avatar'}
               </button>
               <input
                 ref={fileRef}
@@ -105,6 +114,13 @@ export default function ProfileSetup() {
               />
             </div>
           </div>
+
+          {showAvatarPicker && (
+            <div style={{ marginBottom: 16 }}>
+              <AvatarPicker value={photoUrl} onSelect={setPhotoUrl} />
+            </div>
+          )}
+
           <label style={{ fontSize: 13, fontWeight: 600, color: 'var(--text-muted)', marginBottom: 6, display: 'block' }}>
             Who can see your photo?
           </label>

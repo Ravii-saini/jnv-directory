@@ -4,6 +4,7 @@ import { updateProfile } from '../firebase/profiles'
 import { uploadProfilePhoto } from '../firebase/photos'
 import { VisibilityPicker } from '../components/VisibilitySelector'
 import Avatar from '../components/Avatar'
+import AvatarPicker from '../components/AvatarPicker'
 import BottomNav from '../components/BottomNav'
 import WhatsAppButtons from '../components/WhatsAppButtons'
 import { HOUSES, STREAMS, type House, type Stream, type Visibility } from '../types'
@@ -15,6 +16,7 @@ export default function OwnProfile() {
   const [saving, setSaving] = useState(false)
   const [uploading, setUploading] = useState(false)
   const [error, setError] = useState<string | null>(null)
+  const [showAvatarPicker, setShowAvatarPicker] = useState(false)
   const fileRef = useRef<HTMLInputElement>(null)
 
   const [form, setForm] = useState({
@@ -105,16 +107,29 @@ export default function OwnProfile() {
           <Avatar name={form.name} photoUrl={form.photoUrl} size={96} />
           {editing && (
             <>
-              <button
-                type="button"
-                className="btn btn-secondary btn-sm"
-                style={{ marginTop: 12 }}
-                onClick={() => fileRef.current?.click()}
-                disabled={uploading}
-              >
-                {uploading ? 'Uploading…' : 'Change photo'}
-              </button>
+              <div style={{ display: 'flex', gap: 8, marginTop: 12, flexWrap: 'wrap', justifyContent: 'center' }}>
+                <button
+                  type="button"
+                  className="btn btn-secondary btn-sm"
+                  onClick={() => fileRef.current?.click()}
+                  disabled={uploading}
+                >
+                  {uploading ? 'Uploading…' : 'Upload photo'}
+                </button>
+                <button
+                  type="button"
+                  className="btn btn-secondary btn-sm"
+                  onClick={() => setShowAvatarPicker((v) => !v)}
+                >
+                  {showAvatarPicker ? 'Hide avatars' : 'Choose an avatar'}
+                </button>
+              </div>
               <input ref={fileRef} type="file" accept="image/png,image/jpeg,image/webp" hidden onChange={handlePhotoChange} />
+              {showAvatarPicker && (
+                <div style={{ marginTop: 14, width: '100%' }}>
+                  <AvatarPicker value={form.photoUrl} onSelect={(url) => set('photoUrl', url)} />
+                </div>
+              )}
               <div style={{ marginTop: 10, width: '100%' }}>
                 <VisibilityPicker value={form.photoVisibility} onChange={(v) => set('photoVisibility', v)} />
               </div>
