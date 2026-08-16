@@ -5,7 +5,8 @@ import { HOUSES, STREAMS, type House, type Stream } from '../types'
 
 export default function Register() {
   const { user } = useAuth()
-  const [name, setName] = useState('')
+  const [name, setName] = useState(user?.displayName ?? '')
+  const [phone, setPhone] = useState('')
   const [stream, setStream] = useState<Stream | ''>('')
   const [house, setHouse] = useState<House | ''>('')
   const [city, setCity] = useState('')
@@ -18,7 +19,8 @@ export default function Register() {
   const [submitting, setSubmitting] = useState(false)
   const [error, setError] = useState<string | null>(null)
 
-  const canSubmit = name.trim() && stream && house && city.trim() && instagram.trim()
+  const canSubmit =
+    name.trim() && phone.length === 10 && stream && house && city.trim() && instagram.trim()
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault()
@@ -26,7 +28,7 @@ export default function Register() {
     setSubmitting(true)
     setError(null)
     try {
-      await submitRegistration(user.uid, user.phoneNumber ?? '', {
+      await submitRegistration(user.uid, `+91${phone}`, {
         name: name.trim(),
         stream: stream as Stream,
         house: house as House,
@@ -58,6 +60,30 @@ export default function Register() {
           <div className="field">
             <label htmlFor="name">Full name *</label>
             <input id="name" className="input" value={name} onChange={(e) => setName(e.target.value)} required />
+          </div>
+
+          <div className="field">
+            <label htmlFor="phone">Phone number *</label>
+            <div style={{ display: 'flex', gap: 8 }}>
+              <span
+                className="input"
+                style={{ width: 56, flexShrink: 0, textAlign: 'center', color: 'var(--text-muted)' }}
+              >
+                +91
+              </span>
+              <input
+                id="phone"
+                className="input"
+                type="tel"
+                inputMode="numeric"
+                placeholder="98765 43210"
+                maxLength={10}
+                value={phone}
+                onChange={(e) => setPhone(e.target.value.replace(/\D/g, '').slice(0, 10))}
+                required
+              />
+            </div>
+            <span className="hint">Defaults to private — only you (and the admin) can see it.</span>
           </div>
 
           <div className="field">

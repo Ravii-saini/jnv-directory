@@ -23,7 +23,10 @@ hand — service workers can't read `.env`.
 
 ## First-time Firebase project setup
 
-1. **Authentication → Sign-in method → enable Phone.**
+1. **Authentication → Sign-in method → enable Google.** (Phone/OTP sign-in
+   was tried first but Google now requires a billing account — Blaze plan —
+   before it'll send any SMS at all, even within the free quota. Google
+   Sign-In needs no billing and works immediately.)
 2. **Firestore Database → Create database** (production mode).
 3. Deploy security rules once the Firebase CLI is installed and you're
    logged in (`npx firebase-tools login`):
