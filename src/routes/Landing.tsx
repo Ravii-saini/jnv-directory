@@ -57,7 +57,9 @@ export default function Landing() {
             <img src="/logo-navodaya.png" alt="Navodaya Vidyalaya Samiti" />
           </div>
           <div style={{ textAlign: 'center' }}>
-            <h1 style={{ fontSize: 22, fontWeight: 800, letterSpacing: '-0.02em' }}>JNV Alwar 2020</h1>
+            <h1 className="gradient-text" style={{ fontSize: 24, fontWeight: 800, letterSpacing: '-0.02em' }}>
+              JNV Alwar 2020
+            </h1>
             <p className="faint" style={{ marginTop: 2 }}>Jawahar Navodaya Vidyalaya, Alwar</p>
           </div>
           <p className="muted" style={{ textAlign: 'center', fontSize: 14 }}>

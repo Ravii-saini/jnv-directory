@@ -1,4 +1,4 @@
-import { useEffect, useState } from 'react'
+import { useEffect, useState, type CSSProperties } from 'react'
 import { useAuth } from '../contexts/AuthContext'
 import {
   subscribeAllMembers,
@@ -67,10 +67,10 @@ export default function Admin() {
   return (
     <div className="screen">
       <div className="topbar">
-        <h1>Admin</h1>
+        <h1 className="gradient-text">Admin</h1>
         {pending.length > 0 && <span className="badge badge-warning">{pending.length} waiting</span>}
       </div>
-      <div className="screen-content" style={{ paddingBottom: 24 }}>
+      <div className="screen-content has-bottom-nav">
         <div className="stat-row">
           <div className="stat-tile">
             <div className="stat-value">{activeMembers.length}</div>
@@ -113,8 +113,8 @@ export default function Admin() {
                 <p className="muted">No pending requests.</p>
               </div>
             )}
-            {pending.map((m) => (
-              <div key={m.uid} className="card">
+            {pending.map((m, i) => (
+              <div key={m.uid} className="card stagger-item" style={{ '--i': i } as CSSProperties}>
                 <div style={{ display: 'flex', alignItems: 'center', gap: 12, marginBottom: 12 }}>
                   <Avatar name={m.name} photoUrl={m.photoUrl} size={44} />
                   <div style={{ flex: 1, minWidth: 0 }}>
@@ -168,8 +168,12 @@ export default function Admin() {
 
         {tab === 'members' && (
           <div style={{ display: 'flex', flexDirection: 'column', gap: 10 }}>
-            {activeMembers.map((m) => (
-              <div key={m.uid} className="card" style={{ display: 'flex', alignItems: 'center', gap: 12 }}>
+            {activeMembers.map((m, i) => (
+              <div
+                key={m.uid}
+                className="card stagger-item"
+                style={{ display: 'flex', alignItems: 'center', gap: 12, '--i': i } as CSSProperties}
+              >
                 <Avatar name={m.name} photoUrl={m.photoUrl} size={44} />
                 <div style={{ flex: 1, minWidth: 0 }}>
                   <div style={{ fontWeight: 700, display: 'flex', alignItems: 'center', gap: 6 }}>

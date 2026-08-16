@@ -110,7 +110,7 @@ export default function OwnProfile() {
         )}
       </div>
 
-      <div className="screen-content">
+      <div className="screen-content has-bottom-nav">
         <div style={{ display: 'flex', flexDirection: 'column', alignItems: 'center', marginBottom: 24 }}>
           <Avatar name={form.name} photoUrl={form.photoUrl} size={96} />
           {editing && (

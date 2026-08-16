@@ -1,4 +1,4 @@
-import { useEffect, useMemo, useState } from 'react'
+import { useEffect, useMemo, useState, type CSSProperties } from 'react'
 import { useAuth } from '../contexts/AuthContext'
 import { subscribeApprovedMembers } from '../firebase/profiles'
 import MemberCard from '../components/MemberCard'
@@ -53,10 +53,10 @@ export default function Directory() {
   return (
     <div className="screen">
       <div className="topbar">
-        <h1>Batch {ACTIVE_BATCH}</h1>
+        <h1 className="gradient-text">Batch {ACTIVE_BATCH}</h1>
         <span className="badge badge-neutral">{members.length} members</span>
       </div>
-      <div className="screen-content" style={{ paddingBottom: 24 }}>
+      <div className="screen-content has-bottom-nav">
         <div className="field" style={{ marginBottom: 16 }}>
           <div style={{ position: 'relative' }}>
             <span
@@ -91,8 +91,10 @@ export default function Directory() {
           </div>
         ) : (
           <div style={{ display: 'flex', flexDirection: 'column', gap: 10 }}>
-            {filtered.map((m) => (
-              <MemberCard key={m.uid} member={m} ctx={ctx} />
+            {filtered.map((m, i) => (
+              <div key={m.uid} className="stagger-item" style={{ '--i': i } as CSSProperties}>
+                <MemberCard member={m} ctx={ctx} />
+              </div>
             ))}
           </div>
         )}
