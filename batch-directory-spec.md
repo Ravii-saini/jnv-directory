@@ -28,14 +28,14 @@ Not a chat app. Not a feed. A living, always-current "who's who" of the batch.
    to fill mandatory fields (Name, 12th Stream, House, Current City,
    Instagram) before submission → submitted for approval. Optional fields
    (Photo, Bio, Job, LinkedIn, College) can be skipped and added later.
-3. **Pending screen** → "Waiting for admin approval" → push notification on
-   outcome:
+3. **Pending screen** → "Waiting for admin approval" → no push notification
+   for v1 (cut, see Notification triggers below); user finds out the outcome
+   by reopening the app, which reflects their current status live
    - Approved → "You're in! Welcome to [Batch] Directory."
    - Rejected → generic "Your request wasn't approved" message
 4. **On approval, first login** → one-time profile setup (see Profile Fields
    below), each field has a visibility selector
-5. **Prompted to "Add to Home Screen"** (one-time instructional screen —
-   manual step, especially needed for iOS push notifications to work)
+5. **Prompted to "Add to Home Screen"** (one-time instructional screen)
 6. **Home = Directory**
    - Search bar — searches by **name and city only** (not job, bio, or other
      fields)
@@ -58,7 +58,8 @@ Not a chat app. Not a feed. A living, always-current "who's who" of the batch.
    Both are static, admin-configured links, with a "copy link" fallback for
    browsers that don't auto-open WhatsApp.
 9. **Admin view (you only)**
-   - Pending requests queue → approve / reject (push sent either way)
+   - Pending requests queue → approve / reject (no push sent, per Notification
+     triggers below)
    - Full member list → remove member (soft-remove: deactivates access,
      keeps profile record rather than hard-deleting)
 
@@ -85,10 +86,12 @@ any verified user across any batch, once multi-batch exists — for now,
 functionally same as "batch only" since only one batch exists.
 
 ## Notification triggers (v1)
-- Signup approved → push to that user
-- Signup rejected → push to that user
-
-That's it for v1 — no ask/feed notifications, since that feature is cut.
+Push notifications are cut for v1 — not needed at this scale. Status changes
+(approved/rejected) are reflected live in the app via a Firestore listener on
+the user's own profile; they just see it next time they open the app, no
+push required. The Cloud Function code for approve/reject push (FCM) exists
+in the repo but is intentionally not relied on — it also requires the Blaze
+plan to deploy, which isn't enabled.
 
 ## Explicitly out of scope for v1
 - Chat, group asks/polls, comments, threads (WhatsApp already does this)
@@ -135,13 +138,11 @@ penetration testing.
 - **Backend/data:** Firebase Firestore (or Postgres if you'd rather keep it
   consistent with your other projects) for profiles, approval queue, member
   status
-- **Notifications:** Firebase Cloud Messaging (FCM) — note iOS push only
-  works for users who completed "Add to Home Screen" on iOS 16.4+
+- **Notifications:** none for v1 — cut, see Notification triggers above
 - **Hosting:** Firebase Hosting or Railway (same as your Rate Limiter plan)
 
 ## Known limitations to communicate to your batch at rollout
-- iOS users must "Add to Home Screen" for push notifications to work at all
-  (Safari-tab-only won't get pushes)
+- No push notifications — check the app to see if you've been approved
 - Admin approval is manual and single-person (you) — expect some delay
   between signup and approval, especially at launch with 50 people joining
   around the same time
